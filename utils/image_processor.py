@@ -1,4 +1,4 @@
-from PIL import Image, ImageDraw, ImageOps, ImageFont
+from PIL import Image, ImageDraw, ImageFont
 
 
 class image_process:

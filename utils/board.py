@@ -1,5 +1,5 @@
-from image_processor import image_process
 from PIL import Image, ImageOps
+from utils.image_processor import image_process
 
 
 class board:
@@ -28,7 +28,7 @@ class board:
             item_name = tiles[tile]["item-name"]
             image_process.add_text_to_image(bordered_img, item_name)
             image.paste(bordered_img, (x, y), mask=bordered_img)
-            matching_teams = image_process.get_teams_with_number(teams, tile_counter)
+            matching_teams = board.get_teams_with_number(teams, tile_counter)
 
             if matching_teams:
                 for team in matching_teams:

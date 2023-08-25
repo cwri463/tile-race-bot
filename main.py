@@ -23,11 +23,11 @@ async def on_message(message):
         return
     if message.channel.id == image_channel_id:
         if message.attachments:
-            team_name = game_utils.find_team_name(message.author)
+            team_name = game_utils.find_team_name(message.author, teams)
             user_id = 165559954516738049
             await client.get_channel(notification_channel_id).send(f"**{team_name}** just uploaded a drop - Waiting for approval from <@{user_id}>")
     if message.channel.id == notification_channel_id and message.content == "!reroll":
-        team_name = game_utils.find_team_name(message.author)
+        team_name = game_utils.find_team_name(message.author, teams)
 
         if teams[team_name]["rerolls"] == 0:
             await client.get_channel(notification_channel_id).send(f'Requesting team **{team_name}** does not have any rerolls left - too bad!')
@@ -52,7 +52,7 @@ async def on_reaction_add(reaction, user):
         return
     
     if reaction.message.channel.id == image_channel_id and str(reaction.emoji) == '✅':
-        team_name = game_utils.find_team_name(reaction.message.author)
+        team_name = game_utils.find_team_name(reaction.message.author, teams)
         dice_roll = game_utils.roll_dice()
         old_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
         game_utils.update_team_tiles(teams[team_name], dice_roll)
@@ -66,7 +66,7 @@ async def on_reaction_add(reaction, user):
         await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
 
     elif reaction.message.channel.id == image_channel_id and str(reaction.emoji) == '❌':
-        team_name = game_utils.find_team_name(reaction.message.author)
+        team_name = game_utils.find_team_name(reaction.message.author, teams)
         await client.get_channel(notification_channel_id).send(f'Drop was declined for **{team_name}** check your image and try again!\n')
 
 
