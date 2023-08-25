@@ -1,0 +1,78 @@
+{   
+    "teams": {
+        "noobs" : {
+            "members" : ["hagenau"],
+            "tile" : 0,
+            "team_icon" : "player0.png",
+            "rerolls" : 1,
+            "last_roll": 0
+        },
+        "pros" : {
+            "members" : ["onlynoobsgetslucky"],
+            "tile" : 0,
+            "team_icon" : "player1.png",
+            "rerolls" : 1,
+            "last_roll": 0
+        },
+        "gamers" : {
+            "members" : ["benja9151", "tranen.9"],
+            "tile" : 0,
+            "team_icon" : "player2.png",
+            "rerolls" : 1,
+            "last_roll": 0
+        } 
+    },
+
+    "board-config": {
+        "board-width": 1600,
+        "board-height": 900,
+        "tile-size": 150
+    },
+
+    "tiles": {
+        "tile0": {
+            "item-name": "Ring of the Gods",
+            "item-picture": "ring_of_gods.png"
+        },
+        "tile1": {
+            "item-name": "Ancestral hat",
+            "item-picture": "ancestral_hat.png"
+        },
+        "tile2": {
+            "item-name": "Osmumten's fang",
+            "item-picture": "fang.png"
+        },
+        "tile3": {
+            "item-name": "Dragon Axe",
+            "item-picture": "dragon_axe.png"
+        },
+        "tile4": {
+            "item-name": "Masori mask",
+            "item-picture": "masori_mask.png"
+        },
+        "tile5": {
+            "item-name": "Masori body",
+            "item-picture": "masori_body.png"
+        },
+        "tile6": {
+            "item-name": "Vidwakier hilt",
+            "item-picture": "void_hilt.png"
+        },
+        "tile7": {
+            "item-name": "Inquisitor's mace",
+            "item-picture": "inq_mace.png"
+        },
+        "tile8": {
+            "item-name": "Elder Maul",
+            "item-picture": "elder_maul.png"
+        },
+        "tile9": {
+            "item-name": "Kodai Wand",
+            "item-picture": "kodai.png"
+        },
+        "tile10": {
+            "item-name": "Elder Maul",
+            "item-picture": "elder_maul.png"
+        }
+    }
+}
