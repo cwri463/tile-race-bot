@@ -20,59 +20,157 @@
             "team_icon" : "player2.png",
             "rerolls" : 1,
             "last_roll": 0
-        } 
+        },
+        "vorkath" : {
+            "members" : ["hagenau"],
+            "tile" : 0,
+            "team_icon" : "player0.png",
+            "rerolls" : 1,
+            "last_roll": 0
+        }
     },
 
     "board-config": {
         "board-width": 1600,
         "board-height": 900,
-        "tile-size": 150
+        "tile-size": 80,
+        "player-size": 60
     },
 
     "tiles": {
         "tile0": {
-            "item-name": "Ring of the Gods",
-            "item-picture": "ring_of_gods.png"
+            "item-name": "Vorkath Head",
+            "tile-desc": "1 Vorkath Head from Vorkath",
+            "item-picture": "vorkath_head.png"
         },
         "tile1": {
-            "item-name": "Ancestral hat",
-            "item-picture": "ancestral_hat.png"
+            "item-name": "Zulrah Unique",
+            "tile-desc": "Any Zulrah Unique (tanz, visage, fang, onyx, muta, jar, pet)",
+            "item-picture": "magic_fang.png"
         },
         "tile2": {
-            "item-name": "Osmumten's fang",
-            "item-picture": "fang.png"
+            "item-name": "DS2 Unique",
+            "tile-desc": "Any DS2 unique from any boss (ingot, vestige, pet, virtus eller 2x orb)",
+            "item-picture": "Virtus_robe.png"
         },
         "tile3": {
-            "item-name": "Dragon Axe",
-            "item-picture": "dragon_axe.png"
+            "item-name": "2 DKs ring",
+            "tile-desc": "Two of any ring from DKs",
+            "item-picture": "Berserker_ring.png"
         },
         "tile4": {
-            "item-name": "Masori mask",
-            "item-picture": "masori_mask.png"
+            "item-name": "C-log GoTR",
+            "tile-race": "Any item from the collection log of guardians of the rift (no pearls)",
+            "item-picture": "Abyssal_protector.png"
         },
         "tile5": {
-            "item-name": "Masori body",
-            "item-picture": "masori_body.png"
-        },
-        "tile6": {
-            "item-name": "Vidwakier hilt",
+            "item-name": "Any wildy item",
+            "tile-desc": "Any wildy item (ring, voidwaker piec, pet, weapon attachment, d-pick)",
             "item-picture": "void_hilt.png"
         },
+        "tile6": {
+            "item-name": "All tables Phosani",
+            "tile-desc": "Any item from each of the non unique drop tables (runes, resourses, consumables)",
+            "item-picture": "Harmonised_orb.png"
+        },
         "tile7": {
-            "item-name": "Inquisitor's mace",
-            "item-picture": "inq_mace.png"
+            "item-name": "C-log WT",
+            "tile-race": "Any item from the collection log of wintertodt",
+            "item-picture": "tome_of_fire.png"
         },
         "tile8": {
-            "item-name": "Elder Maul",
-            "item-picture": "elder_maul.png"
+            "item-name": "C-log Tempoross",
+            "tile-race": "Any item from the collection log of tempoross (no pearls)",
+            "item-picture": "Fish_barrel.png"
         },
         "tile9": {
-            "item-name": "Kodai Wand",
-            "item-picture": "kodai.png"
+            "item-name": "Barrows weapon",
+            "tile-desc": "Obtain any barrows weapon",
+            "item-picture": "Dharok_axe.png"
         },
         "tile10": {
-            "item-name": "Elder Maul",
-            "item-picture": "elder_maul.png"
+            "item-name": "GM Speed times",
+            "tile-desc": "2 different speed GM times",
+            "item-picture": "gm_slayer_helm.png"
+        },
+        "tile11": {
+            "item-name": "GWD Unique",
+            "tile-desc": "Any Unique from any boss (3 shard or sara sword can be used as well)",
+            "item-picture": "Zamorak_hilt.png"
+        },
+        "tile12": {
+            "item-name": "Firecapes + CA",
+            "tile-desc": "Each player completes the fightcaves including 1 CA task above master",
+            "item-picture": "Fire_cape.png"
+        },
+        "tile13": {
+            "item-name": "Mole elite/bone",
+            "tile-desc": "Obtain an elite clue or long/curved bone",
+            "item-picture": "Giant_mole.png"
+        },
+        "tile14": {
+            "item-name": "Dragon item KQ",
+            "tile-desc": "Obtain any dragon item from KQ table (including rare drop table)",
+            "item-picture": "Dragon_Chain.png"
+        },
+        "tile15": {
+            "item-name": "(g) items",
+            "tile-desc": "Get two (g) items from any clue",
+            "item-picture": "Adamant_platebody_(g).png"
+        },
+        "tile16": {
+            "item-name": "Sarachnis Cudgel",
+            "tile-desc": "Obtain cudgel from sarachnis",
+            "item-picture": "Sarachnis_cudgel.png"
+        },
+        "tile17": {
+            "item-name": "C-log raids",
+            "tile-desc": "One collection log from any raids (no capes or masori kit)",
+            "item-picture": "masori_mask.png"
+        },
+        "tile18": {
+            "item-name": "3m+ in ores",
+            "tile-race": "Get 3m+ in the price checker only from ores dropped by Zalcano",
+            "item-picture": "Smolcano.png"
+        },
+        "tile19": {
+            "item-name": "Gauntlet seed",
+            "tile-desc": "Any seed from the gauntlet (weapon, armour, enhanced)",
+            "item-picture": "enhanced_crystal_weapon_seed.png"
+        },
+        "tile20": {
+            "item-name": "Any shield piece",
+            "tile-desc": "Obtain any of the pieces to either odium ward or malediction ward",
+            "item-picture": "Odium_shard_2.png"
+        },
+        "tile21": {
+            "item-name": "Slayer Uniques",
+            "tile-desc": "Get two unique drops from any slayer boss (dust from GG etc. does not count)",
+            "item-picture": "prim_crystal.png"
+        },
+        "tile22": {
+            "item-name": "GM CA's",
+            "tile-desc": "Each playher must complete 2 GM CA's no dubes among the team!!",
+            "item-picture": "gm_avernic.png"
+        },
+        "tile23": {
+            "item-name": "Venator shard",
+            "tile-desc": "Obtain a venator shard",
+            "item-picture": "Venator_shard.png"
+        },
+        "tile24": {
+            "item-name": "DS2 world tour",
+            "tile-desc": "Unique from each boss (vestige, virtus, orb or ingot)",
+            "item-picture": "ultor.png"
+        },
+        "tile25": {
+            "item-name": "Any raid purple",
+            "tile-desc": "One purple from any raid",
+            "item-picture": "masori_mask.png"
+        },
+        "tile26": {
+            "item-name": "END",
+            "item-picture": "finish.png"
         }
     }
 }

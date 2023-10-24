@@ -14,6 +14,8 @@ client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
+    board.generate_board(tiles, board_data, teams)
+    await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
     print(f'We have logged in as {client.user}')
 
 
