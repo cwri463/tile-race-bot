@@ -49,7 +49,7 @@
             "item-picture": "magic_fang.png"
         },
         "tile2": {
-            "item-name": "DS2 Unique",
+            "item-name": "DT2 Unique",
             "tile-desc": "Any DS2 unique from any boss (ingot, vestige, pet, virtus eller 2x orb)",
             "item-picture": "Virtus_robe.png"
         },
@@ -159,7 +159,7 @@
             "item-picture": "Venator_shard.png"
         },
         "tile24": {
-            "item-name": "DS2 world tour",
+            "item-name": "DT2 world tour",
             "tile-desc": "Unique from each boss (vestige, virtus, orb or ingot)",
             "item-picture": "ultor.png"
         },

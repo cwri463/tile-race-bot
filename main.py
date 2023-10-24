@@ -41,9 +41,11 @@ async def on_message(message):
             game_utils.update_team_tiles(teams[team_name], dice_roll)
             game_utils.update_last_roll(teams[team_name], dice_roll)
             new_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
+            new_tile_desc = tiles[f"tile{teams[team_name]['tile']}"]["tile-desc"]
             teams[team_name]["rerolls"] -= 1
             await client.get_channel(notification_channel_id).send(f'Rerolling for team **{team_name}** from **{old_tile_name}** 🎲 ... \
-                                                                \n New roll is: **{dice_roll}** new tile is **{new_tile_name}** you have **{teams[team_name]["rerolls"]}** rerolls left!\n')
+                                                                \nNew roll is: **{dice_roll}** new tile is **{new_tile_name}** you have **{teams[team_name]["rerolls"]}** rerolls left! \
+                                                                \n**Description:** {new_tile_desc}.')
             board.generate_board(tiles, board_data, teams)
             await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
 
@@ -60,9 +62,11 @@ async def on_reaction_add(reaction, user):
         game_utils.update_team_tiles(teams[team_name], dice_roll)
         game_utils.update_last_roll(teams[team_name], dice_roll)
         new_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
+        new_tile_desc = tiles[f"tile{teams[team_name]['tile']}"]["tile-desc"]
 
         await client.get_channel(notification_channel_id).send(f'Drop for **{old_tile_name}** was approved 🎲 rolling for **{team_name}** ... \
-                                                               \n Roll is: **{dice_roll}** new tile is **{new_tile_name}** good luck!\n')
+                                                               \nRoll is: **{dice_roll}** new tile is **{new_tile_name}** good luck! \
+                                                               \n**Description:** {new_tile_desc}.')
         
         board.generate_board(tiles, board_data, teams)
         await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
