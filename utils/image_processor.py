@@ -1,18 +1,18 @@
 from PIL import Image, ImageDraw, ImageFont
 
 
-class image_process:
+class ImageProcess:
     def image_resizer(img, board_data):
         '''Function to resize an image maintaining aspect ratio based on specified tile size'''
-        wpercent = (board_data["tile-size"]/float(img.size[0]))
+        wpercent = board_data["tile-size"]/float(img.size[0])
         hsize = int((float(img.size[0])*float(wpercent)))
         img = img.resize((hsize, board_data["tile-size"]), Image.Resampling.LANCZOS)
         return img # Return the resized image
-    
-    
+
+
     def player_image_resizer(img, board_data):
         '''Function to resize a player image maintaining aspect ratio from specified player size'''
-        wpercent = (board_data["player-size"]/float(img.size[0]))
+        wpercent = board_data["player-size"]/float(img.size[0])
         hsize = int((float(img.size[0])*float(wpercent)))
         img = img.resize((hsize, board_data["player-size"]), Image.Resampling.LANCZOS)
         return img # Return the resized player image
@@ -36,22 +36,22 @@ class image_process:
             return
         if tile_counter < 8:
             draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=2)
-            draw.polygon([(end_x, end_y - 5), (end_x + 10, end_y), (end_x, end_y + 5)], 
+            draw.polygon([(end_x, end_y - 5), (end_x + 10, end_y), (end_x, end_y + 5)],
                          fill=(255, 255, 255))
         elif tile_counter >= 8 and tile_counter <= 9:
             draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=2)
-            draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)], 
+            draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)],
                          fill=(255, 255, 255))
         elif tile_counter > 9 and tile_counter < 17:
             draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=2)
-            draw.polygon([(end_x, end_y - 5), (end_x - 10, end_y), (end_x, end_y + 5)], 
+            draw.polygon([(end_x, end_y - 5), (end_x - 10, end_y), (end_x, end_y + 5)],
                          fill=(255, 255, 255))
         elif tile_counter >= 17 and tile_counter <= 18:
             draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=2)
-            draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)], 
+            draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)],
                          fill=(255, 255, 255))
         elif tile_counter > 19 and tile_counter != end_tile:
             draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=2)
-            draw.polygon([(end_x, end_y - 5), (end_x + 10, end_y), (end_x, end_y + 5)], 
+            draw.polygon([(end_x, end_y - 5), (end_x + 10, end_y), (end_x, end_y + 5)],
                          fill=(255, 255, 255))
         return

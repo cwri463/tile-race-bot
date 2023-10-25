@@ -1,5 +1,5 @@
 from PIL import Image, ImageOps
-from utils.image_processor import image_process
+from utils.image_processor import ImageProcess
 
 
 class Board:
@@ -23,7 +23,7 @@ class Board:
         for tile in tiles:
             # Open the image of the current tile item and standardize the size
             img = Image.open(rf"images\{tiles[tile]['item-picture']}")
-            img = image_process.image_resizer(img, board_data)
+            img = ImageProcess.image_resizer(img, board_data)
             width, height = img.size
             new_width = width + 100
             new_height = height + 100
@@ -38,7 +38,7 @@ class Board:
 
             # Add item name as text to the tile image
             item_name = tiles[tile]["item-name"]
-            image_process.add_text_to_image(bordered_img, item_name)
+            ImageProcess.add_text_to_image(bordered_img, item_name)
 
             # Paste the tile on the game board
             image.paste(bordered_img, (x, y), mask=bordered_img)
@@ -53,7 +53,7 @@ class Board:
                 team_placement_y = 15
                 for team in matching_teams:
                     player_image = Image.open(rf"images\{teams[team]['team_icon']}")
-                    player_image = image_process.player_image_resizer(player_image, board_data)
+                    player_image = ImageProcess.player_image_resizer(player_image, board_data)
                     image.paste(player_image, (x + team_placement_x, y + team_placement_y), 
                                 mask=player_image)
 
@@ -78,34 +78,34 @@ class Board:
                 start_x = x + 2 * board_data["tile-size"]
                 end_x = start_x + 55
                 end_y = y + board_data["tile-size"] + 10
-                image_process.add_arrow(image, start_x, y, end_x, end_y, tile_counter, end_tile)
+                ImageProcess.add_arrow(image, start_x, y, end_x, end_y, tile_counter, end_tile)
                 x = x + bordered_img.size[0] + 40 # Move right for the next tile in the same row
 
             elif tile_counter >= 8 and tile_counter <= 9:
                 end_x = x + 10 + board_data["tile-size"]
                 start_y = y + board_data["tile-size"] * 2 + 20
                 end_y = start_y + 20
-                image_process.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
+                ImageProcess.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
                 y = y + bordered_img.size[1] + 25 # Move down for the next row of tiles
 
             elif tile_counter > 9 and tile_counter < 17:
                 end_x = x - 30
                 end_y = y + board_data["tile-size"] + 10
-                image_process.add_arrow(image, x, y, end_x, end_y, tile_counter, end_tile)
+                ImageProcess.add_arrow(image, x, y, end_x, end_y, tile_counter, end_tile)
                 x = x - bordered_img.size[0] - 40 # Move left for the next tile in the same row
 
             elif tile_counter >= 17 and tile_counter <= 18:
                 end_x = x + 10 + board_data["tile-size"]
                 start_y = y + board_data["tile-size"] * 2 + 20
                 end_y = start_y + 20
-                image_process.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
+                ImageProcess.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
                 y = y + bordered_img.size[1] + 25  # Move down for the next row of tiles
 
             elif tile_counter > 19:
                 start_x = x + 2 * board_data["tile-size"]
                 end_x = start_x + 55
                 end_y = y + board_data["tile-size"] + 10
-                image_process.add_arrow(image, start_x, y, end_x, end_y, tile_counter, end_tile)
+                ImageProcess.add_arrow(image, start_x, y, end_x, end_y, tile_counter, end_tile)
                 x = x + bordered_img.size[0] + 40 # Move right for the next tile in the same row
 
         # Save the final game board image
