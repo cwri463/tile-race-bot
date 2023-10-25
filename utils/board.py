@@ -48,7 +48,7 @@ class board:
 
             # Paste team icons on the tile for each matching team
             if matching_teams:
-                team_counter = 1
+                team_counter = 0
                 team_placement_x = 15
                 team_placement_y = 15
                 for team in matching_teams:
