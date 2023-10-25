@@ -28,10 +28,9 @@ class image_process:
         draw.text((x, y), text, font=font, fill=(0, 0, 0))  # Add black text to the image
 
     
-    def add_arrow(image, bordered_img, x, y, end_x, end_y, tile_counter, end_tile):
+    def add_arrow(image, x, y, end_x, end_y, tile_counter, end_tile):
         draw = ImageDraw.Draw(image)
         if tile_counter == end_tile:
-            image.paste(bordered_img, (x, y), mask=bordered_img)
             return
         elif tile_counter < 8:
             draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=2)
@@ -48,5 +47,4 @@ class image_process:
         elif tile_counter > 19 and tile_counter != end_tile:
             draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=2)
             draw.polygon([(end_x, end_y - 5), (end_x + 10, end_y), (end_x, end_y + 5)], fill=(255, 255, 255))
-        image.paste(bordered_img, (x, y), mask=bordered_img)
         return

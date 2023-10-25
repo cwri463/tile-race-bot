@@ -74,33 +74,37 @@ class board:
 
             # Update position for the next tile placement based on the tile number
             if tile_counter < 8:
-                end_x = x + 55 + 2 * board_data["tile-size"]
-                end_y = y + board_data["tile-size"]
-                image_process.add_arrow(image, bordered_img, x, y, end_x, end_y, tile_counter, end_tile)
+                start_x = x + 2 * board_data["tile-size"]
+                end_x = start_x + 55
+                end_y = y + board_data["tile-size"] + 10
+                image_process.add_arrow(image, start_x, y, end_x, end_y, tile_counter, end_tile)
                 x = x + bordered_img.size[0] + 40 # Move right for the next tile in the same row
             
             elif tile_counter >= 8 and tile_counter <= 9:
-                end_x = x + 20 + board_data["tile-size"]
-                end_y = y + board_data["tile-size"] * 3 - 40
-                image_process.add_arrow(image, bordered_img, x, y, end_x, end_y, tile_counter, end_tile)
+                end_x = x + 10 + board_data["tile-size"]
+                start_y = y + board_data["tile-size"] * 2 + 20
+                end_y = start_y + 20
+                image_process.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
                 y = y + bordered_img.size[1] + 25 # Move down for the next row of tiles
             
             elif tile_counter > 9 and tile_counter < 17:
                 end_x = x - 30
-                end_y = y + board_data["tile-size"]
-                image_process.add_arrow(image, bordered_img, x, y, end_x, end_y, tile_counter, end_tile)
+                end_y = y + board_data["tile-size"] + 10
+                image_process.add_arrow(image, x, y, end_x, end_y, tile_counter, end_tile)
                 x = x - bordered_img.size[0] - 40 # Move left for the next tile in the same row
             
             elif tile_counter >= 17 and tile_counter <= 18:
-                end_x = x + 20 + board_data["tile-size"]
-                end_y = y + board_data["tile-size"] * 3 - 40
-                image_process.add_arrow(image, bordered_img, x, y, end_x, end_y, tile_counter, end_tile)
+                end_x = x + 10 + board_data["tile-size"]
+                start_y = y + board_data["tile-size"] * 2 + 20
+                end_y = start_y + 20
+                image_process.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
                 y = y + bordered_img.size[1] + 25  # Move down for the next row of tiles
             
             elif tile_counter > 19:
-                end_x = x + 55 + 2 * board_data["tile-size"]
-                end_y = y + board_data["tile-size"]
-                image_process.add_arrow(image, bordered_img, x, y, end_x, end_y, tile_counter, end_tile)
+                start_x = x + 2 * board_data["tile-size"]
+                end_x = start_x + 55
+                end_y = y + board_data["tile-size"] + 10
+                image_process.add_arrow(image, start_x, y, end_x, end_y, tile_counter, end_tile)
                 x = x + bordered_img.size[0] + 40 # Move right for the next tile in the same row
         
         # Save the final game board image
