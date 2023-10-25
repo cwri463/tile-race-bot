@@ -50,7 +50,7 @@ class ImageProcess:
             draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=2)
             draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)],
                          fill=(255, 255, 255))
-        elif tile_counter > 19 and tile_counter != end_tile:
+        elif tile_counter > 18 and tile_counter != end_tile:
             draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=2)
             draw.polygon([(end_x, end_y - 5), (end_x + 10, end_y), (end_x, end_y + 5)],
                          fill=(255, 255, 255))

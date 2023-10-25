@@ -101,7 +101,7 @@ class Board:
                 ImageProcess.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
                 y = y + bordered_img.size[1] + 25  # Move down for the next row of tiles
 
-            elif tile_counter > 19:
+            elif tile_counter > 18:
                 start_x = x + 2 * board_data["tile-size"]
                 end_x = start_x + 55
                 end_y = y + board_data["tile-size"] + 10
