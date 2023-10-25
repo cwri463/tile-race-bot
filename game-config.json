@@ -50,12 +50,12 @@
         },
         "tile2": {
             "item-name": "DT2 Unique",
-            "tile-desc": "Any DS2 unique from any boss (ingot, vestige, pet, virtus eller 2x orb)",
+            "tile-desc": "Any DT2 unique from any boss (ingot, vestige, pet, virtus or 2x orb)",
             "item-picture": "Virtus_robe.png"
         },
         "tile3": {
             "item-name": "2 DKs ring",
-            "tile-desc": "Two of any ring from DKs",
+            "tile-desc": "Two rings from any of the DKs",
             "item-picture": "Berserker_ring.png"
         },
         "tile4": {
@@ -65,7 +65,7 @@
         },
         "tile5": {
             "item-name": "Any wildy item",
-            "tile-desc": "Any wildy item (ring, voidwaker piec, pet, weapon attachment, d-pick)",
+            "tile-desc": "Any wildy item (ring, voidwaker piece, pet, weapon attachment, d-pick)",
             "item-picture": "void_hilt.png"
         },
         "tile6": {
