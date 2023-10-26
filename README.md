@@ -43,8 +43,9 @@ Example of trying to reroll while not having any reroll left.
 
 ## TODO's
 
-- Addition of roll again and go back tiles.
+- Addition of roll-again and go-back tiles.
 - Bigger board size.
-- Option to split into two paths at some points in the board.
-- Always on functionality where games can be initialized through commands.
+- Option to split into two paths at some points on the board.
+- Always on functionality, where games can be initialized through commands.
 - Increase number of teams up from 4.
+- Change displayed team name from dict key to value in order to have spaces, emojies, etc. in the name.
