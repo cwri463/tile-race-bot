@@ -1,6 +1,6 @@
 {   
     "teams": {
-        "noobs" : {
+        "maxed-mongols" : {
             "members" : ["hagenau", "tranen.9", "victorious110"],
             "tile" : 0,
             "team_icon" : "player1.png",
