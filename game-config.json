@@ -87,7 +87,7 @@
         "tile10": {
             "item-name": "Master Speed times",
             "tile-desc": "6 different master speed times",
-            "item-picture": "Vampyric_slayer_helmet.png",
+            "item-picture": "master_avernic_defender.png",
             "must-hit": false
         },
         "tile11": {
