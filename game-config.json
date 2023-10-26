@@ -7,7 +7,7 @@
             "rerolls" : 1,
             "last_roll": 0
         },
-        "nathunhestene" : {
+        "nathopperne" : {
             "members" : ["kadue", "_vinther", "benja9151"],
             "tile" : 0,
             "team_icon" : "player2.png",
@@ -77,7 +77,7 @@
         "tile10": {
             "item-name": "Master Speed times",
             "tile-desc": "6 different master speed times",
-            "item-picture": "gm_slayer_helm.png"
+            "item-picture": "Vampyric_slayer_helmet.png"
         },
         "tile11": {
             "item-name": "GWD Unique",
@@ -132,7 +132,7 @@
         "tile22": {
             "item-name": "4 GM CA's",
             "tile-desc": "Each playher must complete 4 GM CA's no dubes among the team (incompletes is 2x)",
-            "item-picture": "gm_avernic.png"
+            "item-picture": "gm_slayer_helm.png"
         },
         "tile23": {
             "item-name": "Venator shard",

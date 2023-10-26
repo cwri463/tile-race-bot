@@ -18,6 +18,7 @@ client = discord.Client(intents=intents)
 async def on_ready():
     # Generate and send the initial game board to the specified channel
     Board.generate_board(tiles, board_data, teams)
+    await client.get_channel(board_channel).purge(check=is_me)
     await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
     print(f'We have logged in as {client.user}')
 
@@ -74,7 +75,12 @@ async def on_message(message):
                               \nNew tile is **{new_tile_name}** you have **{teams[team_name]["rerolls"]}** rerolls left! \
                               \n**Description:** {new_tile_desc}.')
             Board.generate_board(tiles, board_data, teams)
+            await client.get_channel(board_channel).purge(check=is_me)
             await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
+
+
+def is_me(m):
+    return m.author == client.user
 
 
 # Event handler for adding reactions to messages
@@ -105,6 +111,7 @@ async def on_reaction_add(reaction, user):
                           \nNew tile is **{new_tile_name}** good luck! \
                           \n**Description:** {new_tile_desc}.')
         Board.generate_board(tiles, board_data, teams)
+        await client.get_channel(board_channel).purge(check=is_me)
         await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
 
     # Handle reactions in the image submission channel when the drop is declined
