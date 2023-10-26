@@ -16,11 +16,16 @@ client = discord.Client(intents=intents)
 # Event handler for when the bot is ready and connected to the Discord server
 @client.event
 async def on_ready():
+    # Delete all messages sent in the notifications channel when initialising new game.
+    await client.get_channel(notification_channel_id).purge(check=is_me)
+
+    # Delete all messages sent in the board channel when initialising new game.
+    await client.get_channel(board_channel).purge(check=is_me)
+
     # Generate and send the initial game board to the specified channel
     Board.generate_board(tiles, board_data, teams)
-    await client.get_channel(board_channel).purge(check=is_me)
     await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
-    print(f'We have logged in as {client.user}')
+    print(f'{client.user} have logged in and are ready to play!')
 
 
 # Event handler for incoming messages
@@ -74,12 +79,17 @@ async def on_message(message):
                               \nNew roll is: **{dice_roll}** \
                               \nNew tile is **{new_tile_name}** you have **{teams[team_name]["rerolls"]}** rerolls left! \
                               \n**Description:** {new_tile_desc}.')
-            Board.generate_board(tiles, board_data, teams)
+
+            # Delete all messages sent in the board channel before posting a new board
             await client.get_channel(board_channel).purge(check=is_me)
+
+            # Updating the board and posting it in the channel
+            Board.generate_board(tiles, board_data, teams)
             await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
 
 
 def is_me(m):
+    """Function used for bot to delete bot messages"""
     return m.author == client.user
 
 
@@ -98,6 +108,23 @@ async def on_reaction_add(reaction, user):
         dice_roll = GameUtils.roll_dice()
         old_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
 
+        # Get must hist values for the next 3 tiles
+        next_tiles = [tiles[f"tile{teams[team_name]['tile'] + 1}"]["must-hit"], 
+                      tiles[f"tile{teams[team_name]['tile'] + 3}"]["must-hit"], 
+                      tiles[f"tile{teams[team_name]['tile'] + 2}"]["must-hit"]]
+        
+        # Check if any of the next 3 tiles is a must hit tile
+        if True in next_tiles:
+
+            # Get the tile which is a must hit tile
+            index_of_true = next_tiles.index(True) + 1
+
+            # Overwrite the previous dice roll to land on the must hit tile if higher
+            if dice_roll > index_of_true:
+                dice_roll = index_of_true
+        else:
+            pass
+
         # Update the team's position based on the dice roll
         GameUtils.update_team_tiles(teams[team_name], dice_roll)
         GameUtils.update_last_roll(teams[team_name], dice_roll)
@@ -110,8 +137,12 @@ async def on_reaction_add(reaction, user):
                           \nRoll is: **{dice_roll}** \
                           \nNew tile is **{new_tile_name}** good luck! \
                           \n**Description:** {new_tile_desc}.')
-        Board.generate_board(tiles, board_data, teams)
+
+        # Delete all messages sent in the board channel before posting a new board
         await client.get_channel(board_channel).purge(check=is_me)
+
+        # Updating the board and posting it in the channel
+        Board.generate_board(tiles, board_data, teams)
         await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
 
     # Handle reactions in the image submission channel when the drop is declined

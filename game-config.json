@@ -27,132 +27,158 @@
         "tile0": {
             "item-name": "Vorkath Head",
             "tile-desc": "One Head from Vorkath",
-            "item-picture": "vorkath_head.png"
+            "item-picture": "vorkath_head.png",
+            "must-hit": false
         },
         "tile1": {
             "item-name": "Zulrah Unique",
             "tile-desc": "Any Zulrah Unique (tanz, visage, fang, onyx, muta, jar, pet)",
-            "item-picture": "magic_fang.png"
+            "item-picture": "magic_fang.png",
+            "must-hit": false
         },
         "tile2": {
             "item-name": "DT2 Unique",
             "tile-desc": "Two DT2 unique from any boss (ingot, quarts or 2x orb)",
-            "item-picture": "Virtus_robe.png"
+            "item-picture": "Virtus_robe.png",
+            "must-hit": false
         },
         "tile3": {
             "item-name": "2 DKs ring",
             "tile-desc": "Two rings from any of the DKs no ring of life",
-            "item-picture": "Berserker_ring.png"
+            "item-picture": "Berserker_ring.png",
+            "must-hit": false
         },
         "tile4": {
             "item-name": "GoTR",
             "tile-race": "Any of the following items from guardians of the rift (both needles, catalytic, dyes, lantern and pet)",
-            "item-picture": "Abyssal_protector.png"
+            "item-picture": "Abyssal_protector.png",
+            "must-hit": false
         },
         "tile5": {
             "item-name": "Any wildy item",
             "tile-desc": "Any wildy item (ring, voidwaker piece, pet, weapon attachment, d-pick and d-2hs)",
-            "item-picture": "void_hilt.png"
+            "item-picture": "void_hilt.png",
+            "must-hit": false
         },
         "tile6": {
             "item-name": "All tables Phosani",
             "tile-desc": "Any item from each of the non unique drop tables (runes, resourses, consumables)",
-            "item-picture": "Harmonised_orb.png"
+            "item-picture": "Harmonised_orb.png",
+            "must-hit": false
         },
         "tile7": {
             "item-name": "C-log WT",
             "tile-race": "Any item from the collection log of wintertodt",
-            "item-picture": "tome_of_fire.png"
+            "item-picture": "tome_of_fire.png",
+            "must-hit": false
         },
         "tile8": {
             "item-name": "C-log Tempoross",
             "tile-race": "Any item from the collection log of tempoross (no flakes)",
-            "item-picture": "Fish_barrel.png"
+            "item-picture": "Fish_barrel.png",
+            "must-hit": false
         },
         "tile9": {
             "item-name": "Barrows weapon",
             "tile-desc": "Obtain any barrows weapon",
-            "item-picture": "Dharok_axe.png"
+            "item-picture": "Dharok_axe.png",
+            "must-hit": false
         },
         "tile10": {
             "item-name": "Master Speed times",
             "tile-desc": "6 different master speed times",
-            "item-picture": "Vampyric_slayer_helmet.png"
+            "item-picture": "Vampyric_slayer_helmet.png",
+            "must-hit": false
         },
         "tile11": {
             "item-name": "GWD Unique",
             "tile-desc": "Any Unique from any boss (all items on c-log)",
-            "item-picture": "Zamorak_hilt.png"
+            "item-picture": "Zamorak_hilt.png",
+            "must-hit": false
         },
         "tile12": {
             "item-name": "Hybrid Firecapes",
             "tile-desc": "Complete 3 fire capes using the 3 different styles melee, ranged, and mage)",
-            "item-picture": "Fire_cape.png"
+            "item-picture": "Fire_cape.png",
+            "must-hit": false
         },
         "tile13": {
             "item-name": "Mole elite/bone",
             "tile-desc": "Obtain an elite clue or long/curved bone",
-            "item-picture": "Giant_mole.png"
+            "item-picture": "Giant_mole.png",
+            "must-hit": false
         },
         "tile14": {
             "item-name": "Dragon item KQ",
             "tile-desc": "Obtain any dragon item from KQ table (including rare drop table)",
-            "item-picture": "Dragon_Chain.png"
+            "item-picture": "Dragon_Chain.png",
+            "must-hit": false
         },
         "tile15": {
             "item-name": "Trimmed items",
             "tile-desc": "Get any trimmed plate armour (g) and (t)",
-            "item-picture": "Adamant_platebody_(g).png"
+            "item-picture": "Adamant_platebody_(g).png",
+            "must-hit": false
         },
         "tile16": {
             "item-name": "Sarachnis Cudgel",
             "tile-desc": "Obtain cudgel from sarachnis",
-            "item-picture": "Sarachnis_cudgel.png"
+            "item-picture": "Sarachnis_cudgel.png",
+            "must-hit": false
         },
         "tile17": {
             "item-name": "Any raid purple",
             "tile-desc": "Purple from any of the 3 raids",
-            "item-picture": "masori_mask.png"
+            "item-picture": "masori_mask.png",
+            "must-hit": false
         },
         "tile19": {
             "item-name": "Gauntlet seed",
             "tile-desc": "Any seed from the gauntlet (weapon, armour, enhanced)",
-            "item-picture": "enhanced_crystal_weapon_seed.png"
+            "item-picture": "enhanced_crystal_weapon_seed.png",
+            "must-hit": false
         },
         "tile20": {
             "item-name": "3m+ in materials",
             "tile-race": "Get 3m+ in the price checker only from the materials droptable",
-            "item-picture": "Smolcano.png"
+            "item-picture": "Smolcano.png",
+            "must-hit": false
         },
         "tile21": {
             "item-name": "Slayer Uniques",
             "tile-desc": "Get two unique drops from any slayer boss (dust from GG etc. does not count)",
-            "item-picture": "prim_crystal.png"
+            "item-picture": "prim_crystal.png",
+            "must-hit": false
         },
         "tile22": {
             "item-name": "4 GM CA's",
             "tile-desc": "Each playher must complete 4 GM CA's no dubes among the team (incompletes is 2x)",
-            "item-picture": "gm_slayer_helm.png"
+            "item-picture": "gm_slayer_helm.png",
+            "must-hit": false
         },
         "tile23": {
             "item-name": "Venator shard",
             "tile-desc": "Obtain a venator shard",
-            "item-picture": "Venator_shard.png"
+            "item-picture": "Venator_shard.png",
+            "must-hit": false
         },
         "tile24": {
             "item-name": "DT2 world tour",
             "tile-desc": "C-log item from each boss (vestige, virtus, orb or ingot)",
-            "item-picture": "ultor.png"
+            "item-picture": "ultor.png",
+            "must-hit": false
         },
         "tile25": {
             "item-name": "Any raid purple",
             "tile-desc": "One purple from any raid",
-            "item-picture": "masori_mask.png"
+            "item-picture": "masori_mask.png",
+            "must-hit": true
         },
         "tile26": {
             "item-name": "END (ARAM)",
             "tile-desc": "Win one ARAM game with Kadues regler",
-            "item-picture": "finish.png"
+            "item-picture": "finish.png",
+            "must-hit": true
         }
     }
 }
