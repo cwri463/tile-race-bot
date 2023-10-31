@@ -34,24 +34,60 @@ class ImageProcess:
         draw = ImageDraw.Draw(image)
         if tile_counter == end_tile:
             return
-        if tile_counter < 8:
-            draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=2)
+        if tile_counter < 11:
+            draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=5)
             draw.polygon([(end_x, end_y - 5), (end_x + 10, end_y), (end_x, end_y + 5)],
-                         fill=(255, 255, 255))
-        elif tile_counter >= 8 and tile_counter <= 9:
-            draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=2)
+                            fill=(255, 255, 255))
+        elif tile_counter >= 11 and tile_counter <= 12:
+            draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=5)
             draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)],
-                         fill=(255, 255, 255))
-        elif tile_counter > 9 and tile_counter < 17:
-            draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=2)
+                            fill=(255, 255, 255))
+        elif tile_counter > 12 and tile_counter < 17:
+            draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=5)
             draw.polygon([(end_x, end_y - 5), (end_x - 10, end_y), (end_x, end_y + 5)],
-                         fill=(255, 255, 255))
+                            fill=(255, 255, 255))
         elif tile_counter >= 17 and tile_counter <= 18:
-            draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=2)
+            draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=5)
             draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)],
-                         fill=(255, 255, 255))
-        elif tile_counter > 18 and tile_counter != end_tile:
-            draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=2)
+                            fill=(255, 255, 255))
+        elif tile_counter > 18 and tile_counter < 23:
+            draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=5)
             draw.polygon([(end_x, end_y - 5), (end_x + 10, end_y), (end_x, end_y + 5)],
-                         fill=(255, 255, 255))
+                            fill=(255, 255, 255))
+        elif tile_counter >= 23 and tile_counter <= 24:
+            draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=5)
+            draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)],
+                            fill=(255, 255, 255))
+        elif tile_counter > 24 and tile_counter < 30:
+            draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=5)
+            draw.polygon([(end_x, end_y - 5), (end_x - 10, end_y), (end_x, end_y + 5)],
+                            fill=(255, 255, 255))
+        elif tile_counter >= 30 and tile_counter <= 34:
+            draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=5)
+            draw.polygon([(end_x - 5, y), (end_x + 5, y), (end_x, y - 10)],
+                            fill=(255, 255, 255))
+        elif tile_counter > 34 and tile_counter < 40:
+            draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=5)
+            draw.polygon([(end_x, end_y - 5), (end_x - 10, end_y), (end_x, end_y + 5)],
+                            fill=(255, 255, 255))
+        elif tile_counter >= 40 and tile_counter <= 41:
+            draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=5)
+            draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)],
+                            fill=(255, 255, 255))
+        elif tile_counter > 41 and tile_counter < 46:
+            draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=5)
+            draw.polygon([(end_x, end_y - 5), (end_x + 10, end_y), (end_x, end_y + 5)],
+                            fill=(255, 255, 255))
+        elif tile_counter >= 46 and tile_counter <= 47:
+            draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=5)
+            draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)],
+                            fill=(255, 255, 255))
+        elif tile_counter > 47 and tile_counter < 52:
+            draw.line([(x, end_y), (end_x, end_y)], fill=(255, 255, 255), width=5)
+            draw.polygon([(end_x, end_y - 5), (end_x - 10, end_y), (end_x, end_y + 5)],
+                            fill=(255, 255, 255))
+        elif tile_counter >= 52 and tile_counter != end_tile:
+            draw.line([(end_x, y), (end_x, end_y)], fill=(255, 255, 255), width=5)
+            draw.polygon([(end_x - 5, end_y), (end_x + 5, end_y), (end_x, end_y + 10)],
+                            fill=(255, 255, 255))
         return

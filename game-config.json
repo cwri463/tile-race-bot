@@ -2,7 +2,7 @@
     "teams": {
         "maxed-mongols" : {
             "members" : ["hagenau", "tranen.9", "victorious110"],
-            "tile" : 0,
+            "tile" : 50,
             "team_icon" : "player1.png",
             "rerolls" : 1,
             "last_roll": 0
@@ -50,7 +50,7 @@
         },
         "tile4": {
             "item-name": "GoTR",
-            "tile-race": "Any of the following items from guardians of the rift (both needles, catalytic, dyes, lantern and pet)",
+            "tile-desc": "Any of the following items from guardians of the rift (both needles, catalytic, dyes, lantern and pet)",
             "item-picture": "Abyssal_protector.png",
             "must-hit": false
         },
@@ -68,13 +68,13 @@
         },
         "tile7": {
             "item-name": "C-log WT",
-            "tile-race": "Any item from the collection log of wintertodt",
+            "tile-desc": "Any item from the collection log of wintertodt",
             "item-picture": "tome_of_fire.png",
             "must-hit": false
         },
         "tile8": {
             "item-name": "C-log Tempoross",
-            "tile-race": "Any item from the collection log of tempoross (no flakes)",
+            "tile-desc": "Any item from the collection log of tempoross (no flakes)",
             "item-picture": "Fish_barrel.png",
             "must-hit": false
         },
@@ -132,15 +132,21 @@
             "item-picture": "masori_mask.png",
             "must-hit": false
         },
-        "tile19": {
+        "tile18": {
             "item-name": "Gauntlet seed",
             "tile-desc": "Any seed from the gauntlet (weapon, armour, enhanced)",
             "item-picture": "enhanced_crystal_weapon_seed.png",
             "must-hit": false
         },
+        "tile19": {
+            "item-name": "3m+ in materials",
+            "tile-desc": "Get 3m+ in the price checker only from the materials droptable",
+            "item-picture": "Smolcano.png",
+            "must-hit": false
+        },
         "tile20": {
             "item-name": "3m+ in materials",
-            "tile-race": "Get 3m+ in the price checker only from the materials droptable",
+            "tile-desc": "Get 3m+ in the price checker only from the materials droptable",
             "item-picture": "Smolcano.png",
             "must-hit": false
         },
@@ -175,10 +181,166 @@
             "must-hit": true
         },
         "tile26": {
+            "item-name": "Any raid purple",
+            "tile-desc": "One purple from any raid",
+            "item-picture": "masori_mask.png",
+            "must-hit": true
+        },
+        "tile27": {
+            "item-name": "Gauntlet seed",
+            "tile-desc": "Any seed from the gauntlet (weapon, armour, enhanced)",
+            "item-picture": "enhanced_crystal_weapon_seed.png",
+            "must-hit": false
+        },
+        "tile28": {
+            "item-name": "3m+ in materials",
+            "tile-desc": "Get 3m+ in the price checker only from the materials droptable",
+            "item-picture": "Smolcano.png",
+            "must-hit": false
+        },
+        "tile29": {
+            "item-name": "Slayer Uniques",
+            "tile-desc": "Get two unique drops from any slayer boss (dust from GG etc. does not count)",
+            "item-picture": "prim_crystal.png",
+            "must-hit": false
+        },
+        "tile30": {
+            "item-name": "4 GM CA's",
+            "tile-desc": "Each playher must complete 4 GM CA's no dubes among the team (incompletes is 2x)",
+            "item-picture": "gm_slayer_helm.png",
+            "must-hit": false
+        },
+        "tile31": {
+            "item-name": "Venator shard",
+            "tile-desc": "Obtain a venator shard",
+            "item-picture": "Venator_shard.png",
+            "must-hit": false
+        },
+        "tile32": {
+            "item-name": "DT2 world tour",
+            "tile-desc": "C-log item from each boss (vestige, virtus, orb or ingot)",
+            "item-picture": "ultor.png",
+            "must-hit": false
+        },
+        "tile33": {
+            "item-name": "Any raid purple",
+            "tile-desc": "One purple from any raid",
+            "item-picture": "masori_mask.png",
+            "must-hit": true
+        },
+        "tile34": {
+            "item-name": "Slayer Uniques",
+            "tile-desc": "Get two unique drops from any slayer boss (dust from GG etc. does not count)",
+            "item-picture": "prim_crystal.png",
+            "must-hit": false
+        },
+        "tile35": {
+            "item-name": "4 GM CA's",
+            "tile-desc": "Each playher must complete 4 GM CA's no dubes among the team (incompletes is 2x)",
+            "item-picture": "gm_slayer_helm.png",
+            "must-hit": false
+        },
+        "tile36": {
+            "item-name": "Venator shard",
+            "tile-desc": "Obtain a venator shard",
+            "item-picture": "Venator_shard.png",
+            "must-hit": false
+        },
+        "tile37": {
+            "item-name": "DT2 world tour",
+            "tile-desc": "C-log item from each boss (vestige, virtus, orb or ingot)",
+            "item-picture": "ultor.png",
+            "must-hit": false
+        },
+        "tile38": {
+            "item-name": "Any raid purple",
+            "tile-desc": "One purple from any raid",
+            "item-picture": "masori_mask.png",
+            "must-hit": true
+        },
+        "tile39": {
+            "item-name": "DT2 world tour",
+            "tile-desc": "C-log item from each boss (vestige, virtus, orb or ingot)",
+            "item-picture": "ultor.png",
+            "must-hit": false
+        },
+        "tile40": {
+            "item-name": "Any raid purple",
+            "tile-desc": "One purple from any raid",
+            "item-picture": "masori_mask.png",
+            "must-hit": true
+        },
+        "tile41": {
+            "item-name": "Slayer Uniques",
+            "tile-desc": "Get two unique drops from any slayer boss (dust from GG etc. does not count)",
+            "item-picture": "prim_crystal.png",
+            "must-hit": false
+        },
+        "tile42": {
+            "item-name": "4 GM CA's",
+            "tile-desc": "Each playher must complete 4 GM CA's no dubes among the team (incompletes is 2x)",
+            "item-picture": "gm_slayer_helm.png",
+            "must-hit": false
+        },
+        "tile43": {
+            "item-name": "Venator shard",
+            "tile-desc": "Obtain a venator shard",
+            "item-picture": "Venator_shard.png",
+            "must-hit": false
+        },
+        "tile44": {
+            "item-name": "DT2 world tour",
+            "tile-desc": "C-log item from each boss (vestige, virtus, orb or ingot)",
+            "item-picture": "ultor.png",
+            "must-hit": false
+        },
+        "tile45": {
+            "item-name": "Any raid purple",
+            "tile-desc": "One purple from any raid",
+            "item-picture": "masori_mask.png",
+            "must-hit": true
+        },
+        "tile46": {
+            "item-name": "Any raid purple",
+            "tile-desc": "One purple from any raid",
+            "item-picture": "masori_mask.png",
+            "must-hit": true
+        },
+        "tile47": {
+            "item-name": "Slayer Uniques",
+            "tile-desc": "Get two unique drops from any slayer boss (dust from GG etc. does not count)",
+            "item-picture": "prim_crystal.png",
+            "must-hit": false
+        },
+        "tile48": {
+            "item-name": "4 GM CA's",
+            "tile-desc": "Each playher must complete 4 GM CA's no dubes among the team (incompletes is 2x)",
+            "item-picture": "gm_slayer_helm.png",
+            "must-hit": false
+        },
+        "tile49": {
+            "item-name": "Venator shard",
+            "tile-desc": "Obtain a venator shard",
+            "item-picture": "Venator_shard.png",
+            "must-hit": false
+        },
+        "tile50": {
+            "item-name": "DT2 world tour",
+            "tile-desc": "C-log item from each boss (vestige, virtus, orb or ingot)",
+            "item-picture": "ultor.png",
+            "must-hit": false
+        },
+        "tile51": {
+            "item-name": "Any raid purple",
+            "tile-desc": "One purple from any raid",
+            "item-picture": "masori_mask.png",
+            "must-hit": false
+        },
+        "tile52": {
             "item-name": "END (ARAM)",
             "tile-desc": "Win one ARAM game with Kadues regler",
             "item-picture": "finish.png",
-            "must-hit": true
+            "must-hit": false
         }
     }
 }

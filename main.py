@@ -63,7 +63,17 @@ async def on_message(message):
             old_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
             last_roll = teams[team_name]["last_roll"]
             teams[team_name]["tile"] -= last_roll
-            dice_roll = GameUtils.roll_dice()
+
+            if teams[team_name]['tile'] + 3 <= len(tiles) - 1:
+                max_dice = 3
+            else:
+                max_dice = len(tiles) - teams[team_name]['tile'] - 1
+
+            next_tiles = []
+            for x in range(max_dice):
+                next_tiles.append(tiles[f"tile{teams[team_name]['tile'] + x + 1}"]["must-hit"])
+
+            dice_roll = GameUtils.roll_dice(max_dice)
             GameUtils.update_team_tiles(teams[team_name], dice_roll)
             GameUtils.update_last_roll(teams[team_name], dice_roll)
             new_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
@@ -105,14 +115,29 @@ async def on_reaction_add(reaction, user):
 
         # Find the team name of the user who submitted the image
         team_name = GameUtils.find_team_name(reaction.message.author, teams)
-        dice_roll = GameUtils.roll_dice()
         old_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
-
-        # Get must hist values for the next 3 tiles
-        next_tiles = [tiles[f"tile{teams[team_name]['tile'] + 1}"]["must-hit"], 
-                      tiles[f"tile{teams[team_name]['tile'] + 3}"]["must-hit"], 
-                      tiles[f"tile{teams[team_name]['tile'] + 2}"]["must-hit"]]
         
+        if old_tile_name == 'END (ARAM)':
+            await client.get_channel(notification_channel_id) \
+                    .send(f'Drop for **{old_tile_name}** was approved. \
+                          \n**{team_name}** have completet the board!! \
+                          \nThank you for playing and better luck next time to the other teams!')
+            return
+            
+
+        if teams[team_name]['tile'] + 3 <= len(tiles) - 1:
+            max_dice = 3
+            print(max_dice)
+        else:
+            max_dice = len(tiles) - teams[team_name]['tile'] - 1
+            print(max_dice)
+
+        next_tiles = []
+        for x in range(max_dice):
+            next_tiles.append(tiles[f"tile{teams[team_name]['tile'] + x + 1}"]["must-hit"])
+
+        dice_roll = GameUtils.roll_dice(max_dice)
+
         # Check if any of the next 3 tiles is a must hit tile
         if True in next_tiles:
 
@@ -159,6 +184,9 @@ if __name__ == "__main__":
     # Load configuration data, secrets, and initialize channels and tokens
     board_data, tiles, teams = ETL.load_config_file()
     secrets = ETL.load_secrets()
+
+    # 'develop' for hidden develop channels 'production' for live channels 
+    secrets = secrets["develop"]
 
     image_channel_id = secrets["image_channel_id"]  # Channel ID for image submissions
     notification_channel_id = secrets["notification_channel_id"]  # Channel ID for notifications
