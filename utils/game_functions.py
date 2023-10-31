@@ -12,9 +12,9 @@ class GameUtils:
         teams_dict["last_roll"] = dice_roll
 
 
-    def roll_dice():
+    def roll_dice(max_roll):
         '''Function to simulate rolling a dice with values 1, 2, and 3'''
-        return random.randint(1, 3) # Return a random integer between 1 and 3
+        return random.randint(1, max_roll) # Return a random integer between 1 and 3
 
 
     def find_team_name(name, teams):
