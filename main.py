@@ -85,6 +85,31 @@ async def on_message(message):
             # Only use the reroll token if the new roll is different from the last roll
             if last_roll != dice_roll:
                 teams[team_name]["rerolls"] -= 1
+            
+            # Roll again if the tile is a roll again tile
+            if new_tile_name == 'Roll again':
+                await client.get_channel(notification_channel_id) \
+                            .send(f'Drop for **{old_tile_name}** was approved, rolling for **{team_name}** \
+                                    \nRoll is: **{dice_roll}** \
+                                    \nNew tile is **{new_tile_name}**! \
+                                    \nRolling again ...')
+                dice_roll = GameUtils.roll_dice(3)
+                GameUtils.update_team_tiles(teams[team_name], dice_roll)
+                GameUtils.update_last_roll(teams[team_name], dice_roll)
+                new_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
+                new_tile_desc = tiles[f"tile{teams[team_name]['tile']}"]["tile-desc"]
+
+                await client.get_channel(notification_channel_id) \
+                            .send(f'Roll is: **{dice_roll}** \
+                                \nNew tile is **{new_tile_name}** good luck! \
+                                \n**Description:** {new_tile_desc}.')
+                # Delete all messages sent in the board channel before posting a new board
+                await client.get_channel(board_channel).purge(check=is_me)
+
+                # Updating the board and posting it in the channel
+                Board.generate_board(tiles, board_data, teams)
+                await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
+                return
 
             # Notify the team about the reroll result and update the game board
             await client.get_channel(notification_channel_id) \
@@ -159,6 +184,31 @@ async def on_reaction_add(reaction, user):
         GameUtils.update_last_roll(teams[team_name], dice_roll)
         new_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
         new_tile_desc = tiles[f"tile{teams[team_name]['tile']}"]["tile-desc"]
+
+        # Roll again if the tile is a roll again tile
+        if new_tile_name == 'Roll again':
+            await client.get_channel(notification_channel_id) \
+                        .send(f'Drop for **{old_tile_name}** was approved, rolling for **{team_name}** \
+                                \nRoll is: **{dice_roll}** \
+                                \nNew tile is **{new_tile_name}**! \
+                                \nRolling again ...')
+            dice_roll = GameUtils.roll_dice(3)
+            GameUtils.update_team_tiles(teams[team_name], dice_roll)
+            GameUtils.update_last_roll(teams[team_name], dice_roll)
+            new_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
+            new_tile_desc = tiles[f"tile{teams[team_name]['tile']}"]["tile-desc"]
+
+            await client.get_channel(notification_channel_id) \
+                        .send(f'Roll is: **{dice_roll}** \
+                             \nNew tile is **{new_tile_name}** good luck! \
+                             \n**Description:** {new_tile_desc}.')
+            # Delete all messages sent in the board channel before posting a new board
+            await client.get_channel(board_channel).purge(check=is_me)
+
+            # Updating the board and posting it in the channel
+            Board.generate_board(tiles, board_data, teams)
+            await client.get_channel(board_channel).send(file=discord.File('game_board.png'))
+            return
 
         # Notify the team about the roll result and update the game board
         await client.get_channel(notification_channel_id) \

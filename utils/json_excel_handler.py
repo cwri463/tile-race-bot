@@ -1,6 +1,5 @@
 import json
 import pandas as pd
-from etl.load_config import ETL
 
 
 def json_to_excel(tiles):
@@ -33,12 +32,14 @@ def excel_to_json(df):
 
 if __name__ == "__main__":
     operation = "to_json"
-    operation = "to_excel"
+    #operation = "to_excel"
 
-    if operation == "to_json":
-        board_data, tiles, teams = ETL.load_config_file()
+    if operation == "to_excel":
+        with open('game-config.json', 'r') as json_file:
+            game_config = json.load(json_file)  # Load game configuration data from JSON file
+        tiles = game_config["tiles"]  # Extract tile data
         json_to_excel(tiles)
 
-    elif operation == "to_excel":
+    elif operation == "to_json":
         df = pd.read_excel(r".\Tile-race-tiles.xlsx")
         excel_to_json(df)
