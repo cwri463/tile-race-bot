@@ -16,7 +16,7 @@ A discord bot developed to host tile-races in Oldschool Runescape. Still in very
 
 Example of gameboard with two player pieces at the start location.
 
-![game_board](https://github.com/MHagenau/tile-race-bot/assets/9133193/6dd32e41-b678-4b99-adfd-8c5708d8a185)
+![game_board](https://github.com/MHagenau/tile-race-bot/assets/9133193/c42cb161-e3e6-429e-a911-0abd00cd8b1f)
 
 Notification to the person(s) responsible for approving uploaded tile completions:
 
@@ -43,8 +43,7 @@ Example of trying to reroll while not having any reroll left.
 
 ## TODO's
 
-- Addition of roll-again and go-back tiles.
-- Bigger board size.
+- Addition of go-back tiles.
 - Option to split into two paths at some points on the board.
 - Always on functionality, where games can be initialized through commands.
 - Increase number of teams up from 4.
