@@ -42,4 +42,3 @@ if __name__ == "__main__":
     elif operation == "to_excel":
         df = pd.read_excel(r".\Tile-race-tiles.xlsx")
         excel_to_json(df)
-

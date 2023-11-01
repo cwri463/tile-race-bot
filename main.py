@@ -64,14 +64,17 @@ async def on_message(message):
             last_roll = teams[team_name]["last_roll"]
             teams[team_name]["tile"] -= last_roll
 
+            # Check the amount of tiles left and correct the diceroll hereafter
             if teams[team_name]['tile'] + 3 <= len(tiles) - 1:
                 max_dice = 3
             else:
                 max_dice = len(tiles) - teams[team_name]['tile'] - 1
 
+            # Check if any of the next 3 tiles is a must hit tile
             next_tiles = []
             for x in range(max_dice):
                 next_tiles.append(tiles[f"tile{teams[team_name]['tile'] + x + 1}"]["must-hit"])
+
 
             dice_roll = GameUtils.roll_dice(max_dice)
             GameUtils.update_team_tiles(teams[team_name], dice_roll)
@@ -117,6 +120,7 @@ async def on_reaction_add(reaction, user):
         team_name = GameUtils.find_team_name(reaction.message.author, teams)
         old_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
         
+        # Check if the last completed tile was the end tile
         if old_tile_name == 'END (ARAM)':
             await client.get_channel(notification_channel_id) \
                     .send(f'Drop for **{old_tile_name}** was approved. \
@@ -124,21 +128,21 @@ async def on_reaction_add(reaction, user):
                           \nThank you for playing and better luck next time to the other teams!')
             return
             
-
+        # Check the amount of tiles left and correct the diceroll hereafter
         if teams[team_name]['tile'] + 3 <= len(tiles) - 1:
             max_dice = 3
-            print(max_dice)
+
         else:
             max_dice = len(tiles) - teams[team_name]['tile'] - 1
-            print(max_dice)
 
+        # Roll dice based on previous restrictions
+        dice_roll = GameUtils.roll_dice(max_dice)
+
+        # Check if any of the next 3 tiles is a must hit tile
         next_tiles = []
         for x in range(max_dice):
             next_tiles.append(tiles[f"tile{teams[team_name]['tile'] + x + 1}"]["must-hit"])
 
-        dice_roll = GameUtils.roll_dice(max_dice)
-
-        # Check if any of the next 3 tiles is a must hit tile
         if True in next_tiles:
 
             # Get the tile which is a must hit tile
