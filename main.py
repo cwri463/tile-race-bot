@@ -38,6 +38,8 @@ async def on_message(message):
     # Handle messages in the image submission channel
     if message.channel.id == image_channel_id:
         if message.attachments:
+            await message.add_reaction('✅')
+            await message.add_reaction('❌')
             # Find the team name of the user who submitted the image
             team_name = GameUtils.find_team_name(message.author, teams)
             user_id = 165559954516738049
@@ -152,7 +154,7 @@ async def on_reaction_add(reaction, user):
                           \n**{team_name}** have completet the board!! \
                           \nThank you for playing and better luck next time to the other teams!')
             return
-            
+
         # Check the amount of tiles left and correct the diceroll hereafter
         if teams[team_name]['tile'] + 3 <= len(tiles) - 1:
             max_dice = 3
