@@ -14,7 +14,11 @@ class GameUtils:
 
     def roll_dice(max_roll):
         '''Function to simulate rolling a dice with values 1, 2, and 3'''
-        return random.randint(1, max_roll) # Return a random integer between 1 and 3
+        percentage_chance = 0.05
+        if random.random() < percentage_chance:
+            return 4
+        else:
+            return random.randint(1, max_roll) # Return a random integer between 1 and 3
 
 
     def find_team_name(name, teams):

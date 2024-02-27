@@ -4,21 +4,32 @@
             "members": [
                 "hagenau",
                 "tranen.9",
-                "victorious110"
+                "_vinther"
             ],
-            "tile": 17,
-            "team_icon": "player1.png",
+            "tile": 0,
+            "team_icon": "player2.png",
             "rerolls": 1,
             "last_roll": 0
         },
         "nathopperne": {
             "members": [
                 "kadue",
-                "_vinther",
+                "victorious110",
                 "benja9151"
             ],
             "tile": 0,
-            "team_icon": "player2.png",
+            "team_icon": "player0.png",
+            "rerolls": 1,
+            "last_roll": 0
+        },
+        "Click Boss": {
+            "members": [
+                "tutte",
+                "fribjergsen",
+                "hrcorydonn"
+            ],
+            "tile": 0,
+            "team_icon": "player1.png",
             "rerolls": 1,
             "last_roll": 0
         }
@@ -32,7 +43,7 @@
     "tiles": {
         "tile0": {
             "item-name": "Vorkath Head",
-            "tile-desc": "One Head from Vorkath",
+            "tile-desc": "Head from Vorkath",
             "item-picture": "vorkath_head.png",
             "must-hit": false
         },
@@ -44,32 +55,32 @@
         },
         "tile2": {
             "item-name": "DT2 Unique",
-            "tile-desc": "Two DT2 unique from any boss (ingot, quarts or 2x orb)",
+            "tile-desc": "Two DT2 unique from any boss (ingot, quarts, virtus, pet or 2x orb)",
             "item-picture": "Virtus_robe.png",
             "must-hit": false
         },
         "tile3": {
             "item-name": "2 DKs ring",
-            "tile-desc": "Two rings from any of the DKs no ring of life",
+            "tile-desc": "Two rings from any of the DKs (no ring of life)",
             "item-picture": "Berserker_ring.png",
             "must-hit": false
         },
         "tile4": {
             "item-name": "GoTR",
-            "tile-desc": "Any of the following items from guardians of the rift (both needles, catalytic, dyes, lantern and pet)",
+            "tile-desc": "Any of the following items from guardians of the rift: Both needles, catalytic, dyes, lantern, pouch and pet",
             "item-picture": "Abyssal_protector.png",
             "must-hit": false
         },
         "tile5": {
-            "item-name": "Herbiar fossil",
-            "tile-desc": "Get Unidentified rare fossil from herbiboar",
+            "item-name": "Herbiboar fossil",
+            "tile-desc": "Get Unidentified large fossil from herbiboar",
             "item-picture": "Herbiboar.png",
             "must-hit": false
         },
         "tile6": {
-            "item-name": "Any wildy item",
-            "tile-desc": "Any wildy item (ring, voidwaker piece, pet, weapon attachment, d-pick and d-2hs)",
-            "item-picture": "void_hilt.png",
+            "item-name": "Revs",
+            "tile-desc": "Any col-log from revenants (no ether and bracelet)",
+            "item-picture": "Craws_bow.png",
             "must-hit": false
         },
         "tile7": {
@@ -86,7 +97,7 @@
         },
         "tile9": {
             "item-name": "C-log Tempoross",
-            "tile-desc": "Any item from the collection log of tempoross (no flakes - soaked pages must be hit twice)",
+            "tile-desc": "Any item from the collection log of tempoross (no flakes - soaked pages must be hit twice unless its the x25 dupe drop)",
             "item-picture": "Fish_barrel.png",
             "must-hit": false
         },
@@ -98,31 +109,31 @@
         },
         "tile11": {
             "item-name": "Master Speed",
-            "tile-desc": "6 different master speed times",
+            "tile-desc": "Complete 6 different master speed times and 3 different perfections CA's (no dupes)",
             "item-picture": "master_avernic_defender.png",
-            "must-hit": false
-        },
-        "tile12": {
-            "item-name": "Entry CA's",
-            "tile-desc": "Complete all the entrymode CA's in ToB as a team",
-            "item-picture": "Avernic_hilt.png",
             "must-hit": true
         },
+        "tile12": {
+            "item-name": "Zombie Axe",
+            "tile-desc": "Obtain a Zombie Axe",
+            "item-picture": "Zombie_axe.png",
+            "must-hit": false
+        },
         "tile13": {
-            "item-name": "Perfection",
-            "tile-desc": "Get 3 different perfections CA's",
-            "item-picture": "lucky_penny.png",
+            "item-name": "Missing",
+            "tile-desc": "Missing",
+            "item-picture": "zenyte.png",
             "must-hit": false
         },
         "tile14": {
             "item-name": "GWD Unique",
-            "tile-desc": "Any Unique from any boss (all items on c-log)",
+            "tile-desc": "Any Unique from any boss (all items on c-log except nihil shard - shard from minion does not count)",
             "item-picture": "Zamorak_hilt.png",
             "must-hit": false
         },
         "tile15": {
             "item-name": "Hybrid Firecapes",
-            "tile-desc": "Complete 3 fire capes using the 3 different styles melee, ranged, and mage)",
+            "tile-desc": "Complete 3 fire capes using the 3 different styles (melee, ranged, and mage)",
             "item-picture": "Fire_cape.png",
             "must-hit": false
         },
@@ -134,7 +145,7 @@
         },
         "tile17": {
             "item-name": "Dragon item KQ",
-            "tile-desc": "Obtain any dragon item from KQ table (including rare drop table)",
+            "tile-desc": "Obtain any dragon item from Kalphite Queen (including rare drop table)",
             "item-picture": "Dragon_Chain.png",
             "must-hit": false
         },
@@ -146,7 +157,7 @@
         },
         "tile19": {
             "item-name": "Trimmed items",
-            "tile-desc": "Get any trimmed plate armour (g) and (t)",
+            "tile-desc": "Get any trimmed plate armour (g) and (t) (any clue type with trimmed armor is acceptable)",
             "item-picture": "Adamant_platebody_(g).png",
             "must-hit": false
         },
@@ -157,26 +168,26 @@
             "must-hit": false
         },
         "tile21": {
-            "item-name": "Abyssal whip",
-            "tile-desc": "Obtain an abyssal whip",
-            "item-picture": "abyssal_whip.png",
+            "item-name": "CoX unique",
+            "tile-desc": "Any C-log item from cox (this includes dark relic, torn prayerscroll but no capes)",
+            "item-picture": "elder_maul.png",
             "must-hit": false
         },
         "tile22": {
-            "item-name": "Dark bow",
-            "tile-desc": "Obtain a dark bow",
-            "item-picture": "Dark_bow.png",
+            "item-name": "Vials",
+            "tile-desc": "Obtain Vials of blood (noramal, entry and hardmore is acceptalbe)",
+            "item-picture": "Vial_of_blood.png",
             "must-hit": false
         },
         "tile23": {
-            "item-name": "Elder chaos",
-            "tile-desc": "Get one piece of elder chaos robes",
-            "item-picture": "Elder_chaos_top.png",
+            "item-name": "ToA C-log",
+            "tile-desc": "Get any unique (no kits) from toa",
+            "item-picture": "Osmumten_fang.png",
             "must-hit": false
         },
         "tile24": {
             "item-name": "3m+ in materials",
-            "tile-desc": "Get 3m+ in the price checker only from the materials droptable",
+            "tile-desc": "Get 3m+ from zalcano in the price checker only from the materials droptable",
             "item-picture": "Smolcano.png",
             "must-hit": false
         },
@@ -194,7 +205,7 @@
         },
         "tile27": {
             "item-name": "KBD heads",
-            "tile-desc": "Get KBD head from king black dragon",
+            "tile-desc": "Obtain KBD heads",
             "item-picture": "Kbd_heads.png",
             "must-hit": false
         },
@@ -206,25 +217,25 @@
         },
         "tile29": {
             "item-name": "DT2 world tour",
-            "tile-desc": "C-log item from each boss (vestige, virtus, orb or ingot)",
+            "tile-desc": "C-log item from each boss (vestige, virtus, orb, quarts, pet or ingot)",
             "item-picture": "ultor.png",
             "must-hit": false
         },
         "tile30": {
-            "item-name": "Zenyte",
-            "tile-desc": "Obtain one zenyte",
-            "item-picture": "zenyte.png",
+            "item-name": "LMS",
+            "tile-desc": "Obtain 30 LMS points as a team",
+            "item-picture": "LMS.png",
             "must-hit": false
         },
         "tile31": {
             "item-name": "Sarachnis Cudgel",
-            "tile-desc": "Obtain cudgel from sarachnis",
+            "tile-desc": "Obtain cudgel from sarachnis (pet and jar also completes)",
             "item-picture": "Sarachnis_cudgel.png",
             "must-hit": false
         },
         "tile32": {
             "item-name": "Raid c-log",
-            "tile-desc": "Get any c-log item from raids (no masori assembler kit)",
+            "tile-desc": "Get any c-log item from raids (no masori assembler kit or KC capes)",
             "item-picture": "masori_mask.png",
             "must-hit": true
         },
@@ -235,9 +246,9 @@
             "must-hit": false
         },
         "tile34": {
-            "item-name": "Onyx Vorkath",
-            "tile-desc": "Obtain onyx bolt tips from vorkath",
-            "item-picture": "Onyx_bolt_tips.png",
+            "item-name": "Wrath vorkath",
+            "tile-desc": "Obtain 3 wrath talismans from Vorkath",
+            "item-picture": "Wrath_talisman.png",
             "must-hit": false
         },
         "tile35": {
@@ -247,33 +258,33 @@
             "must-hit": false
         },
         "tile36": {
-            "item-name": "Deathless CM",
-            "tile-desc": "Complete a deathless challengemode chambers of xeric (Immortal raid team)",
-            "item-picture": "Metamorphic_dust.png",
+            "item-name": "Deathless raider",
+            "tile-desc": "Complete a deathless CM raid (Immortal raid team), 350 ToA with no deaths (Something of an expert myself) and ToB",
+            "item-picture": "lucky_penny.png",
             "must-hit": false
         },
         "tile37": {
-            "item-name": "ToA Expert",
-            "tile-desc": "Complete a 350 ToA with no deaths (Something of an expert myself)",
-            "item-picture": "Tumeken.png",
+            "item-name": "Missing",
+            "tile-desc": "Missing",
+            "item-picture": "zenyte.png",
             "must-hit": false
         },
         "tile38": {
-            "item-name": "Any ToB?",
-            "tile-desc": "Complete a ToB run with 2 perfect room achievements",
-            "item-picture": "Scythe_of_vitur.png",
+            "item-name": "Missing",
+            "tile-desc": "Missing",
+            "item-picture": "zenyte.png",
             "must-hit": false
         },
         "tile39": {
-            "item-name": "Nightmare coins",
-            "tile-desc": "Get coin drop from nightmare or phosani (normal nightmare needs 2 coin drops)",
+            "item-name": "Phosani",
+            "tile-desc": "Get runes drop 5 times from Phosani",
             "item-picture": "Inquisitor_hauberk.png",
             "must-hit": false
         },
         "tile40": {
-            "item-name": "Any jars",
-            "tile-desc": "Get any jar in the game",
-            "item-picture": "Jar_of_eyes.png",
+            "item-name": "Scurrius",
+            "tile-desc": "Get 5x Scurrius' spine",
+            "item-picture": "Scurrius.png",
             "must-hit": false
         },
         "tile41": {
@@ -283,26 +294,26 @@
             "must-hit": false
         },
         "tile42": {
-            "item-name": "Spirit seed",
-            "tile-desc": "Obtain a spirit seed",
-            "item-picture": "Spirit_seed.png",
+            "item-name": "Easy Clues",
+            "tile-desc": "Obtain any elegant item or any bob shirt",
+            "item-picture": "Bob_shirt.png",
             "must-hit": false
         },
         "tile43": {
             "item-name": "Common GWD",
-            "tile-desc": "Get any of zammy spear, steam bstaff, sara sword or sara light",
+            "tile-desc": "Get any of: Zamorakian Spear, Steam Battlestaff, Saradomin Sword, or Saradomin's light",
             "item-picture": "Zamorakian_spear.png",
             "must-hit": false
         },
         "tile44": {
             "item-name": "Nex item",
-            "tile-desc": "Get any unique nex item or 600 Nihil shards as a team",
+            "tile-desc": "Get any unique nex item or 150 Nihil shards as a team",
             "item-picture": "Torva_platebody_(damaged).png",
             "must-hit": false
         },
         "tile45": {
             "item-name": "Wildy item",
-            "tile-desc": "Wildy item (ring, voidwaker piece, pet, weapon attachment)",
+            "tile-desc": "Any wildy item (rings, voidwaker piece, pet, or weapon attachment)",
             "item-picture": "ring_of_gods.png",
             "must-hit": false
         },
@@ -319,9 +330,9 @@
             "must-hit": false
         },
         "tile48": {
-            "item-name": "ToA purple",
-            "tile-desc": "Obtain a purple from tombs of amascus",
-            "item-picture": "Osmumten_fang.png",
+            "item-name": "Clue hunter",
+            "tile-desc": "Complete 5 elite or master clues (no imps, keys or skotizo)",
+            "item-picture": "elite_clue.png",
             "must-hit": false
         },
         "tile49": {

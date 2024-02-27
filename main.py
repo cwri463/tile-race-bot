@@ -42,12 +42,12 @@ async def on_message(message):
             await message.add_reaction('❌')
             # Find the team name of the user who submitted the image
             team_name = GameUtils.find_team_name(message.author, teams)
-            user_id = 165559954516738049
+            # user_id = 165559954516738049
 
             # Notify in the designated notification channel about the image submission
             await client.get_channel(notification_channel_id) \
                         .send(f"**{team_name}** just uploaded a drop - " \
-                              + f"Waiting for approval from <@{user_id}>")
+                              + "waiting for approval.") #  from <@{user_id}>")
 
     # Handle messages in the notification channel with the "!reroll" command
     if message.channel.id == notification_channel_id and message.content == "!reroll":
@@ -242,7 +242,7 @@ if __name__ == "__main__":
     secrets = ETL.load_secrets()
 
     # 'develop' for hidden develop channels 'production' for live channels 
-    secrets = secrets["develop"]
+    secrets = secrets["production"]
 
     image_channel_id = secrets["image_channel_id"]  # Channel ID for image submissions
     notification_channel_id = secrets["notification_channel_id"]  # Channel ID for notifications
