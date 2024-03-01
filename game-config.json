@@ -120,9 +120,9 @@
             "must-hit": false
         },
         "tile13": {
-            "item-name": "Missing",
-            "tile-desc": "Missing",
-            "item-picture": "zenyte.png",
+            "item-name": "Elder chaos",
+            "tile-desc": "Obtain a pieve of elder chaos robes",
+            "item-picture": "Elder_chaos_top.png",
             "must-hit": false
         },
         "tile14": {
@@ -150,9 +150,9 @@
             "must-hit": false
         },
         "tile18": {
-            "item-name": "Roll again",
-            "tile-desc": "Roll again",
-            "item-picture": "dice.png",
+            "item-name": "Blood shard",
+            "tile-desc": "Obtain a blood shard",
+            "item-picture": "Blood_shard.png",
             "must-hit": false
         },
         "tile19": {
@@ -237,7 +237,7 @@
             "item-name": "Raid c-log",
             "tile-desc": "Get any c-log item from raids (no masori assembler kit or KC capes)",
             "item-picture": "masori_mask.png",
-            "must-hit": true
+            "must-hit": false
         },
         "tile33": {
             "item-name": "Wildy shield",
@@ -247,7 +247,7 @@
         },
         "tile34": {
             "item-name": "Wrath vorkath",
-            "tile-desc": "Obtain 3 wrath talismans from Vorkath",
+            "tile-desc": "Obtain 5 wrath talismans from Vorkath",
             "item-picture": "Wrath_talisman.png",
             "must-hit": false
         },
@@ -259,20 +259,20 @@
         },
         "tile36": {
             "item-name": "Deathless raider",
-            "tile-desc": "Complete a deathless CM raid (Immortal raid team), 350 ToA with no deaths (Something of an expert myself) and ToB",
+            "tile-desc": "Complete a deathless CM raid (Immortal raid team) and 350 ToA with no deaths (Something of an expert myself)",
             "item-picture": "lucky_penny.png",
-            "must-hit": false
+            "must-hit": true
         },
         "tile37": {
-            "item-name": "Missing",
-            "tile-desc": "Missing",
-            "item-picture": "zenyte.png",
+            "item-name": "Champion scroll",
+            "tile-desc": "Obtain any champion scroll",
+            "item-picture": "champion_scroll.png",
             "must-hit": false
         },
         "tile38": {
-            "item-name": "Missing",
-            "tile-desc": "Missing",
-            "item-picture": "zenyte.png",
+            "item-name": "Chaos ely",
+            "tile-desc": "Get pet or dragon pickaxe from chaos elemental",
+            "item-picture": "Dragon_pick.png",
             "must-hit": false
         },
         "tile39": {
@@ -288,9 +288,9 @@
             "must-hit": false
         },
         "tile41": {
-            "item-name": "Roll again",
-            "tile-desc": "Roll again",
-            "item-picture": "dice.png",
+            "item-name": "Common GWD",
+            "tile-desc": "Get any of: Zamorakian Spear, Steam Battlestaff, Saradomin Sword, or Saradomin's light",
+            "item-picture": "Zamorakian_spear.png",
             "must-hit": false
         },
         "tile42": {
@@ -300,9 +300,9 @@
             "must-hit": false
         },
         "tile43": {
-            "item-name": "Common GWD",
-            "tile-desc": "Get any of: Zamorakian Spear, Steam Battlestaff, Saradomin Sword, or Saradomin's light",
-            "item-picture": "Zamorakian_spear.png",
+            "item-name": "Zulrah fang",
+            "tile-desc": "Get a fang item from Zulrah (Magic Fang or Tanzanite fang)",
+            "item-picture": "magic_fang.png",
             "must-hit": false
         },
         "tile44": {
@@ -324,9 +324,9 @@
             "must-hit": false
         },
         "tile47": {
-            "item-name": "Zulrah fang",
-            "tile-desc": "Get a fang item from Zulrah (Magic Fang or Tanzanite fang)",
-            "item-picture": "magic_fang.png",
+            "item-name": "GWD armor",
+            "tile-desc": "Obtain a armor piece from GWD (bandos boots, chest and plate + arma chest, legs and helm)",
+            "item-picture": "Arma_chest.png",
             "must-hit": false
         },
         "tile48": {

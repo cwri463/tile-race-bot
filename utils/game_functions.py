@@ -16,7 +16,7 @@ class GameUtils:
         '''Function to simulate rolling a dice with values 1, 2, and 3'''
         percentage_chance = 0.05
         if random.random() < percentage_chance:
-            return 4
+            return 5
         else:
             return random.randint(1, max_roll) # Return a random integer between 1 and 3
 
