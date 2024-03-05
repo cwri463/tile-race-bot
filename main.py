@@ -67,10 +67,17 @@ async def on_message(message):
             teams[team_name]["tile"] -= last_roll
 
             # Check the amount of tiles left and correct the diceroll hereafter
+            
             if teams[team_name]['tile'] + 3 <= len(tiles) - 1:
-                max_dice = 3
+                if teams[team_name]['tile'] + 5 <= len(tiles) - 1:
+                    max_dice = 3
+                    bonus_roll = True
+                else:
+                    max_dice = 3
+                    bonus_roll = False       
             else:
                 max_dice = len(tiles) - teams[team_name]['tile'] - 1
+                bonus_roll = False
 
             # Check if any of the next 3 tiles is a must hit tile
             next_tiles = []
@@ -78,7 +85,7 @@ async def on_message(message):
                 next_tiles.append(tiles[f"tile{teams[team_name]['tile'] + x + 1}"]["must-hit"])
 
 
-            dice_roll = GameUtils.roll_dice(max_dice)
+            dice_roll = GameUtils.roll_dice(max_dice, bonus_roll)
             GameUtils.update_team_tiles(teams[team_name], dice_roll)
             GameUtils.update_last_roll(teams[team_name], dice_roll)
             new_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
@@ -95,7 +102,7 @@ async def on_message(message):
                                     \nRoll is: **{dice_roll}** \
                                     \nNew tile is **{new_tile_name}**! \
                                     \nRolling again ...')
-                dice_roll = GameUtils.roll_dice(3)
+                dice_roll = GameUtils.roll_dice(max_dice, bonus_roll)
                 GameUtils.update_team_tiles(teams[team_name], dice_roll)
                 GameUtils.update_last_roll(teams[team_name], dice_roll)
                 new_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
@@ -157,13 +164,18 @@ async def on_reaction_add(reaction, user):
 
         # Check the amount of tiles left and correct the diceroll hereafter
         if teams[team_name]['tile'] + 3 <= len(tiles) - 1:
-            max_dice = 3
-
+            if teams[team_name]['tile'] + 5 <= len(tiles) - 1:
+                max_dice = 3
+                bonus_roll = True
+            else:
+                max_dice = 3
+                bonus_roll = False       
         else:
             max_dice = len(tiles) - teams[team_name]['tile'] - 1
+            bonus_roll = False
 
         # Roll dice based on previous restrictions
-        dice_roll = GameUtils.roll_dice(max_dice)
+        dice_roll = GameUtils.roll_dice(max_dice, bonus_roll)
 
         # Check if any of the next 3 tiles is a must hit tile
         next_tiles = []
@@ -194,7 +206,7 @@ async def on_reaction_add(reaction, user):
                                 \nRoll is: **{dice_roll}** \
                                 \nNew tile is **{new_tile_name}**! \
                                 \nRolling again ...')
-            dice_roll = GameUtils.roll_dice(3)
+            dice_roll = GameUtils.roll_dice(max_dice, bonus_roll)
             GameUtils.update_team_tiles(teams[team_name], dice_roll)
             GameUtils.update_last_roll(teams[team_name], dice_roll)
             new_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
@@ -242,7 +254,7 @@ if __name__ == "__main__":
     secrets = ETL.load_secrets()
 
     # 'develop' for hidden develop channels 'production' for live channels 
-    secrets = secrets["production"]
+    secrets = secrets["develop"]
 
     image_channel_id = secrets["image_channel_id"]  # Channel ID for image submissions
     notification_channel_id = secrets["notification_channel_id"]  # Channel ID for notifications

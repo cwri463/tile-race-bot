@@ -12,16 +12,18 @@ class GameUtils:
         teams_dict["last_roll"] = dice_roll
 
 
-    def roll_dice(max_roll):
+    def roll_dice(max_roll, bonus_roll):
         '''Function to simulate rolling a dice with values 1, 2, and 3'''
-        if max_roll != 3:
+        if not bonus_roll:
             return random.randint(1, max_roll)
-        
-        percentage_chance = 0.05
-        if random.random() < percentage_chance:
-            return 5
         else:
-            return random.randint(1, max_roll) # Return a random integer between 1 and 3
+            percentage_chance = 0.05
+            if random.random() < percentage_chance: # 5% chance to roll 5
+                print("Lucky")
+                return 5
+            else:
+                print("Unlucky")
+                return random.randint(1, max_roll) # Return a random integer between 1 and max_roll
 
 
     def find_team_name(name, teams):
