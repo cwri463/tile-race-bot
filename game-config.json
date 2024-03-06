@@ -140,13 +140,13 @@
         "tile16": {
             "item-name": "Mole elite/bone",
             "tile-desc": "Obtain an elite clue or long/curved bone",
-            "item-picture": "Giant_mole.png",
+            "item-picture": "Giant_Mole.png",
             "must-hit": false
         },
         "tile17": {
             "item-name": "Dragon item KQ",
             "tile-desc": "Obtain any dragon item from Kalphite Queen (including rare drop table)",
-            "item-picture": "Dragon_Chain.png",
+            "item-picture": "Dragon_chain.png",
             "must-hit": false
         },
         "tile18": {

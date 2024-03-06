@@ -19,10 +19,8 @@ class GameUtils:
         else:
             percentage_chance = 0.05
             if random.random() < percentage_chance: # 5% chance to roll 5
-                print("Lucky")
                 return 5
             else:
-                print("Unlucky")
                 return random.randint(1, max_roll) # Return a random integer between 1 and max_roll
 
 

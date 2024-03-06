@@ -15,14 +15,14 @@ class Board:
     def generate_board(tiles, board_data, teams):
         '''Function to generate and save the game board image'''
         # Open the background image of the game board
-        image = Image.open(r".\images\board_background2.jpg")
+        image = Image.open(r"./images/board_background2.jpg")
         x, y = 90, 15  # Initial position to paste tiles on the board
         tile_counter = 0  # Counter for tracking the tile number
 
         # Loop through each tile and process it
         for tile in tiles:
             # Open the image of the current tile item and standardize the size
-            img = Image.open(rf"images\{tiles[tile]['item-picture']}")
+            img = Image.open(rf"images/{tiles[tile]['item-picture']}")
             img = ImageProcess.image_resizer(img, board_data)
             width, height = img.size
             new_width = width + 95
@@ -52,7 +52,7 @@ class Board:
                 team_placement_x = 15
                 team_placement_y = 15
                 for team in matching_teams:
-                    player_image = Image.open(rf"images\playericons\{teams[team]['team_icon']}")
+                    player_image = Image.open(rf"images/playericons/{teams[team]['team_icon']}")
                     player_image = ImageProcess.player_image_resizer(player_image, board_data)
                     image.paste(player_image, (x + team_placement_x, y + team_placement_y), 
                                 mask=player_image)

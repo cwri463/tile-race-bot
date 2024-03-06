@@ -11,7 +11,7 @@ def json_to_excel(tiles):
         temp_df["tile"] = item
         df = pd.concat([df, temp_df])
 
-    df.to_excel(r".\Tile-race-tiles.xlsx")
+    df.to_excel(r"./Tile-race-tiles.xlsx")
 
 
 def excel_to_json(df):
@@ -41,5 +41,5 @@ if __name__ == "__main__":
         json_to_excel(tiles)
 
     elif operation == "to_json":
-        df = pd.read_excel(r".\Tile-race-tiles.xlsx")
+        df = pd.read_excel(r"./Tile-race-tiles.xlsx")
         excel_to_json(df)
