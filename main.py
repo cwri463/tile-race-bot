@@ -67,8 +67,8 @@ async def on_message(message):
             teams[team_name]["tile"] -= last_roll
 
             # Check the amount of tiles left and correct the diceroll hereafter
-            
             if teams[team_name]['tile'] + 3 <= len(tiles) - 1:
+                # Extra check to account for the chance to roll a 4
                 if teams[team_name]['tile'] + 5 <= len(tiles) - 1:
                     max_dice = 3
                     bonus_roll = True
@@ -164,6 +164,7 @@ async def on_reaction_add(reaction, user):
 
         # Check the amount of tiles left and correct the diceroll hereafter
         if teams[team_name]['tile'] + 3 <= len(tiles) - 1:
+            # Extra check to account for the chance to roll a 4
             if teams[team_name]['tile'] + 5 <= len(tiles) - 1:
                 max_dice = 3
                 bonus_roll = True

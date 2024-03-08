@@ -13,13 +13,13 @@ class GameUtils:
 
 
     def roll_dice(max_roll, bonus_roll):
-        '''Function to simulate rolling a dice with values 1, 2, and 3'''
+        '''Function to simulate rolling a dice with max value as input and a chance to roll high'''
         if not bonus_roll:
             return random.randint(1, max_roll)
         else:
             percentage_chance = 0.05
-            if random.random() < percentage_chance: # 5% chance to roll 5
-                return 5
+            if random.random() < percentage_chance: # 5% chance to roll 4
+                return 4
             else:
                 return random.randint(1, max_roll) # Return a random integer between 1 and max_roll
 
