@@ -108,9 +108,9 @@
         "must-hit": false
     },
     "tile18": {
-        "item-name": "Blood shard",
-        "tile-desc": "Obtain a blood shard",
-        "item-picture": "Blood_shard.png",
+        "item-name": "Scurrius",
+        "tile-desc": "Get 5x Scurrius' spine",
+        "item-picture": "Scurrius.png",
         "must-hit": false
     },
     "tile19": {
@@ -127,7 +127,7 @@
     },
     "tile21": {
         "item-name": "CoX unique",
-        "tile-desc": "Any C-log item from cox (this includes dark relic, torn prayerscroll but no capes)",
+        "tile-desc": "Unique item from cox  (torn prayerscroll counts)",
         "item-picture": "elder_maul.png",
         "must-hit": false
     },
@@ -139,7 +139,7 @@
     },
     "tile23": {
         "item-name": "ToA C-log",
-        "tile-desc": "Get any unique (no kits) from toa",
+        "tile-desc": "Get any unique (no kits no chest) from toa",
         "item-picture": "Osmumten_fang.png",
         "must-hit": false
     },
@@ -240,9 +240,9 @@
         "must-hit": false
     },
     "tile40": {
-        "item-name": "Scurrius",
-        "tile-desc": "Get 5x Scurrius' spine",
-        "item-picture": "Scurrius.png",
+        "item-name": "Vorkath Yew seed",
+        "tile-desc": "Obtain a Yew seed from Vorkath",
+        "item-picture": "Yew_seed.png",
         "must-hit": false
     },
     "tile41": {
@@ -295,7 +295,7 @@
     },
     "tile49": {
         "item-name": "Venator shard",
-        "tile-desc": "Obtain a venator shard",
+        "tile-desc": "Obtain two venator shards",
         "item-picture": "Venator_shard.png",
         "must-hit": false
     },
