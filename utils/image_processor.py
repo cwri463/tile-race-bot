@@ -21,9 +21,10 @@ class ImageProcess:
     def add_text_to_image(image, text):
         '''Function to add text to an image'''
         draw = ImageDraw.Draw(image)
-        # Use Arial font with font size 18 (font and size can be changed)
-        font = ImageFont.truetype("arial.ttf", 18)
-        text_width, text_height = draw.textsize(text, font=font)
+        font_size = 18
+        font = ImageFont.truetype("arial.ttf", font_size)
+        text_width = draw.textlength(text, font=font)
+        text_height = font_size * 1
         x = (image.width - text_width) // 2 # Calculate X position to center the text horizontally
         y = image.height - text_height - 10 # Calculate Y position to place the text at the bottom
         draw.text((x, y), text, font=font, fill=(0, 0, 0))  # Add black text to the image
