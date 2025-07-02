@@ -96,7 +96,18 @@ async def on_message(message: discord.Message):
         return
 
     if message.channel.id == image_channel_id and message.attachments:
-        await message.add_reaction("✅"); await message.add_reaction("❌")
+        CHECK_EMOJI = "\N{WHITE HEAVY CHECK MARK}"   # ✅
+        CROSS_EMOJI = "\N{CROSS MARK}"               # ❌
+
+    try:
+        await message.add_reaction(CHECK_EMOJI)
+    except Exception as e:
+          print(f"[WARN] couldn’t add ✅ : {e}")
+
+    try:
+        await message.add_reaction(CROSS_EMOJI)
+    except Exception as e:
+        print(f"[WARN] couldn’t add ❌ : {e}")
         tname = GameUtils.find_team_name(message.author, teams)
         await client.get_channel(notification_channel_id).send(
             f"**{tname}** uploaded a drop – waiting for approval."
