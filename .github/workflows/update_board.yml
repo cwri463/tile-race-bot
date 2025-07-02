@@ -9,7 +9,8 @@ jobs:
   update:
     runs-on: ubuntu-latest
     env:
-      SHEET_CSV_URL: ${{ secrets.SHEET_CSV_URL }}
+  SHEET_CSV_URL:        ${{ secrets.SHEET_CSV_URL }}
+  SHEET_TEAMS_CSV_URL:  ${{ secrets.SHEET_TEAMS_CSV_URL }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
