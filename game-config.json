@@ -25,5 +25,75 @@
     "tile-size": 80,
     "player-size": 60
   },
-  "tiles": {}
+  "tiles": {
+    "tile0": {
+      "item-name": "Man",
+      "item-picture": "Npc_man.png",
+      "tile-desc": "",
+      "coords": [
+        0,
+        0
+      ],
+      "next": [
+        "tile1"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile1": {
+      "item-name": "Pet",
+      "item-picture": "Abyssal_protector.png",
+      "tile-desc": "",
+      "coords": [
+        1,
+        0
+      ],
+      "next": [
+        "tile2"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile2": {
+      "item-name": "Arma Chest",
+      "item-picture": "Arma_chest.png",
+      "tile-desc": "",
+      "coords": [
+        2,
+        1
+      ],
+      "next": [
+        "tile3",
+        "tile4"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile3": {
+      "item-name": "Bob Shirt",
+      "item-picture": "Bob_shirt.png",
+      "tile-desc": "",
+      "coords": [
+        2,
+        2
+      ],
+      "next": [
+        "tile5"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile4": {
+      "item-name": "Herbi",
+      "item-picture": "Herbiboar.png",
+      "tile-desc": "",
+      "coords": [
+        2,
+        3
+      ],
+      "next": [],
+      "points": 1,
+      "must-hit": false
+    }
+  }
 }
