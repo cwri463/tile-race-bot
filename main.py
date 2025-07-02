@@ -256,7 +256,7 @@ if __name__ == "__main__":
 
     # 'develop' for hidden develop channels 'production' for live channels 
     if "develop" in secrets:
-    secrets = secrets["develop"]
+   
 
     image_channel_id = secrets["image_channel_id"]  # Channel ID for image submissions
     notification_channel_id = secrets["notification_channel_id"]  # Channel ID for notifications
