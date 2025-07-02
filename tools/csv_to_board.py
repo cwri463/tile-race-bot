@@ -38,7 +38,7 @@ with tiles_csv.open(newline="", encoding="utf-8") as fh:
             "item-picture": row["item-picture"].strip(),
             "coords":       [int(row["row"]), int(row["col"])],
             "next":         [t.strip() for t in row["nextTiles"].split(",") if t.strip()],
-            "points":       int(row.get("points", "1")),
+            "points":       int(row.get("points") or 1),
             "must-hit":     str(row.get("must-hit", "")).lower() == "true",
         }
 
