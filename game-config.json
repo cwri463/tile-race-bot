@@ -17,6 +17,15 @@
       "tile": "tile0",
       "rerolls": 5,
       "last_roll": 0
+    },
+    "team c": {
+      "name": "team c",
+      "members": [
+        "203664557762150401"
+      ],
+      "tile": "tile1",
+      "rerolls": 3,
+      "last_roll": 0
     }
   },
   "board-config": {
