@@ -116,7 +116,7 @@ def generate_board(tiles: Dict[str, Dict[str, Any]],
                 px = cx + dx
                 py = cy + dy
 
-                sprite_file = TOKEN_DIR / f\"{tname}.png\"
+                sprite_file = TOKEN_DIR / f"{tname}.png" 
                 if sprite_file.is_file():
                     token = Image.open(sprite_file).convert(\"RGBA\")
                     token = ImageProcess.player_image_resizer(token, board_data)
