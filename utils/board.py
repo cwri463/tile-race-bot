@@ -132,6 +132,39 @@ def generate_board(tiles: Dict[str, Dict[str, Any]],
             nrow, ncol = tiles[nxt]["coords"]
             x2, y2 = _tile_center(nrow, ncol, tile_size)
             _draw_arrow(canvas, x1, y1, x2, y2)
+    # -------------------- pass 3: draw team tokens ----------------------- #
+    player_size = board_data.get("player-size", 40)
+    token_radius = player_size // 2
+
+    for tname, tdata in teams.items():
+        tile_id = tdata["tile"]           # e.g. "tile3"
+        if tile_id not in tiles:
+            continue                      # bad data, skip
+
+        row, col = tiles[tile_id]["coords"]
+        cx, cy = _tile_center(row, col, tile_size)
+
+        # offset so multiple teams stack diagonally
+        offset = list(teams.keys()).index(tname) * (token_radius + 4)
+        px = cx - token_radius + offset
+        py = cy - token_radius + offset
+
+        # draw a simple colored circle (hash team name → color)
+        colour = tuple(hash(tname + str(i)) % 192 + 32 for i in range(3)) + (255,)
+        draw = ImageDraw.Draw(canvas)
+        draw.ellipse(
+            [(px, py), (px + player_size, py + player_size)],
+            fill=colour,
+            outline=(255, 255, 255, 255),
+            width=2,
+        )
+
+        # team initial
+        ImageProcess.add_text_to_image(
+            canvas.crop((px, py, px + player_size, py + player_size)),
+            tname[:1].upper(),
+        )
+        canvas.alpha_composite(canvas.crop((px, py, px + player_size, py + player_size)), (px, py))
 
     # -------------------- save result ------------------------------------ #
     output = Path("game_board.png")
