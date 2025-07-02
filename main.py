@@ -2,6 +2,7 @@ import os
 import warnings
 
 import discord
+import networkx as nx 
 
 from load_config import ETL
 from utils.board import Board
@@ -47,7 +48,7 @@ async def on_message(message: discord.Message):
     if message.author == client.user:
         return
 
-    # 1️⃣  Image-submission channel ------------------------------------------ #
+    #   Image-submission channel ------------------------------------------ #
     if message.channel.id == image_channel_id and message.attachments:
         await message.add_reaction("✅")
         await message.add_reaction("❌")
@@ -57,7 +58,7 @@ async def on_message(message: discord.Message):
             f"**{team_name}** just uploaded a drop – waiting for approval."
         )
 
-    # 2️⃣  !reroll command in notification channel -------------------------- #
+    #  !reroll command in notification channel -------------------------- #
     if (
         message.channel.id == notification_channel_id
         and message.content.strip().lower() == "!reroll"
@@ -180,14 +181,18 @@ async def refresh_board():
 # Main entry-point
 # --------------------------------------------------------------------------- #
 if __name__ == "__main__":
-    # 1️⃣  Load static data (board, tiles, teams)
     board_data, tiles, teams = ETL.load_config_file()
+    secrets = ETL.load_secrets()
 
-    # 2️⃣  Load secrets / env vars
-    secrets = ETL.load_secrets()  # → {"DISCORD_TOKEN": "..."}
-    image_channel_id = int(os.getenv("IMAGE_CHANNEL_ID", 0))
-    notification_channel_id = int(os.getenv("NOTIFICATION_CHANNEL_ID", 0))
-    board_channel_id = int(os.getenv("BOARD_CHANNEL_ID", 0))
+    # ---- graph of tile connections ----
+    GRAPH = nx.DiGraph()
+    for tid, t in tiles.items():
+        for nxt in t.get("next", []):
+            GRAPH.add_edge(tid, nxt)
+
+    image_channel_id       = int(os.getenv("IMAGE_CHANNEL_ID"))
+    notification_channel_id = int(os.getenv("NOTIFICATION_CHANNEL_ID"))
+    board_channel_id       = int(os.getenv("BOARD_CHANNEL_ID"))
 
     # basic sanity-check
     if not all((image_channel_id, notification_channel_id, board_channel_id)):
@@ -196,5 +201,5 @@ if __name__ == "__main__":
             "must be set as environment variables in Railway."
         )
 
-    # 3️⃣  Run the bot
+    # Run the bot
     client.run(secrets["DISCORD_TOKEN"])
