@@ -7,17 +7,16 @@ from pathlib import Path
 from typing import Dict, Any, Tuple, List
 import math
 
-from PIL import Image, ImageDraw
-from PIL import Image, ImageOps  
+from PIL import Image, ImageDraw, ImageOps
 
 from utils.image_processor import ImageProcess
 
 # --------------------------------------------------------------------------- #
 # Tunables
 # --------------------------------------------------------------------------- #
-TILE_GUTTER = 10                  # px between squares
+TILE_GUTTER = 10  # px between squares
 ARROW_WIDTH = 4
-TOKEN_DIR   = Path("images/team_tokens")   # where teama.png etc live
+TOKEN_DIR = Path("images/team_tokens")
 
 # --------------------------------------------------------------------------- #
 # Helpers
@@ -27,14 +26,11 @@ def _tile_top_left(row: int, col: int, tile_size: int) -> Tuple[int, int]:
     y = TILE_GUTTER + row * (tile_size + TILE_GUTTER)
     return x, y
 
-
 def _tile_center(row: int, col: int, tile_size: int) -> Tuple[int, int]:
     tlx, tly = _tile_top_left(row, col, tile_size)
     return tlx + tile_size // 2, tly + tile_size // 2
 
-
 def _draw_arrow(canvas: Image.Image, x1: int, y1: int, x2: int, y2: int):
-    """Straight arrow using ImageProcess helper for head."""
     ImageProcess.draw_arrow(canvas, x1, y1, x2, y2, width=ARROW_WIDTH)
 
 # --------------------------------------------------------------------------- #
@@ -43,19 +39,22 @@ def _draw_arrow(canvas: Image.Image, x1: int, y1: int, x2: int, y2: int):
 def generate_board(tiles: Dict[str, Dict[str, Any]],
                    board_data: Dict[str, Any],
                    teams: Dict[str, Dict[str, Any]] | None = None) -> None:
-    """
-    Render the board PNG to disk (game_board.png).
-    *tiles* must contain coords [row,col] and next list on each entry.
-    """
-
     tile_size = int(board_data["tile-size"])
     max_row = max(t["coords"][0] for t in tiles.values())
     max_col = max(t["coords"][1] for t in tiles.values())
 
-    width  = (max_col + 1) * (tile_size + TILE_GUTTER) + TILE_GUTTER
+    width = (max_col + 1) * (tile_size + TILE_GUTTER) + TILE_GUTTER
     height = (max_row + 1) * (tile_size + TILE_GUTTER) + TILE_GUTTER
 
-    canvas = Image.new("RGBA", (width, height), (30, 30, 30, 255))  # dark bg
+    # ---- load / prepare background ------------------------------------
+    bg_path = Path("images/backgrounds/board_bg.png")
+    if bg_path.is_file():
+        bg = Image.open(bg_path).convert("RGBA")
+        bg = ImageOps.fit(bg, (width, height), method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
+    else:
+        bg = Image.new("RGBA", (width, height), (30, 30, 30, 255))
+
+    canvas = bg.copy()
 
     # ---------------- pass 1: draw tiles -------------------------------- #
     for tid, t in tiles.items():
@@ -71,7 +70,6 @@ def generate_board(tiles: Dict[str, Dict[str, Any]],
         tile_img = ImageProcess.image_resizer(tile_img, board_data)
         canvas.alpha_composite(tile_img, (x, y))
 
-        # caption
         caption_crop = canvas.crop((x, y, x + tile_size, y + tile_size))
         ImageProcess.add_text_to_image(caption_crop, t["item-name"])
         canvas.alpha_composite(caption_crop, (x, y))
@@ -88,12 +86,11 @@ def generate_board(tiles: Dict[str, Dict[str, Any]],
             cx2, cy2 = _tile_center(nr, nc, tile_size)
             _draw_arrow(canvas, cx1, cy1, cx2, cy2)
 
-         # ---------------- pass 3: team tokens ------------------------------- #
+    # ---------------- pass 3: team tokens ------------------------------- #
     if teams:
-        player_size  = int(board_data.get("player-size", 40))
+        player_size = int(board_data.get("player-size", 40))
         token_radius = player_size // 2
 
-        # group teams by tile
         by_tile: Dict[str, list[str]] = {}
         for tname, tdata in teams.items():
             by_tile.setdefault(tdata["tile"], []).append(tname)
@@ -102,14 +99,13 @@ def generate_board(tiles: Dict[str, Dict[str, Any]],
             if tile_id not in tiles:
                 continue
             row, col = tiles[tile_id]["coords"]
-            cx, cy   = _tile_center(row, col, tile_size)
+            cx, cy = _tile_center(row, col, tile_size)
 
-            # layout up to 4 tokens in a 2×2 grid
             grid_pos = [
-                (-token_radius, -token_radius),  # top-left
-                ( token_radius, -token_radius),  # top-right
-                (-token_radius,  token_radius),  # bottom-left
-                ( token_radius,  token_radius),  # bottom-right
+                (-token_radius, -token_radius),
+                ( token_radius, -token_radius),
+                (-token_radius,  token_radius),
+                ( token_radius,  token_radius),
             ]
 
             for idx, tname in enumerate(team_list[:4]):
