@@ -95,6 +95,45 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
 # --------------------------------------------------------------------------- #
 # Game-logic helpers (unchanged from the original, just refactored)
 # --------------------------------------------------------------------------- #
+
+def advance_team(team: dict, dice: int) -> None:
+    """
+    Move *team* forward exactly *dice* edges in GRAPH.
+    • If only one path of that length exists, auto-advance.
+    • If multiple paths exist, prompt the team to choose by reactions.
+    """
+    cur = team["tile"]            # e.g. "tile17"
+    # all simple paths exactly <dice> steps
+    paths = [
+        p for p in nx.all_simple_paths(GRAPH, cur, None, cutoff=dice)
+        if len(p) - 1 == dice
+    ]
+    if not paths:
+        return                    # dead-end: stay put
+    if len(paths) == 1:
+        team["tile"] = paths[0][-1]
+        return
+
+    # ----- fork prompt -----
+    prompt = (
+        f"**{team['name']}**, you rolled **{dice}** "
+        f"and have {len(paths)} paths. React to choose:"
+    )
+    msg = await client.get_channel(notification_channel_id).send(prompt)
+
+    emoji_map = {}  # emoji → tileID
+    options = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫"]
+    for idx, path in enumerate(paths[:len(options)]):
+        dest = path[-1]
+        emoji = options[idx]
+        emoji_map[emoji] = dest
+        await msg.add_reaction(emoji)
+        await client.get_channel(notification_channel_id).send(
+            f"{emoji} → {tiles[dest]['item-name']}"
+        )
+
+    # store pending choice so on_reaction_add can finish it
+    team["pending_paths"] = emoji_map
 async def perform_reroll(team_name: str):
     old_tile_name = tiles[f"tile{teams[team_name]['tile']}"]["item-name"]
     last_roll = teams[team_name]["last_roll"]
