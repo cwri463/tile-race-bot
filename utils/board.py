@@ -8,6 +8,7 @@ from typing import Dict, Any, Tuple, List
 import math
 
 from PIL import Image, ImageDraw
+from PIL import Image, ImageOps  
 
 from utils.image_processor import ImageProcess
 
