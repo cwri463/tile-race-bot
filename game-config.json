@@ -1,7 +1,7 @@
 {
   "teams": {
-    "team a": {
-      "name": "team a",
+    "teama": {
+      "name": "teama",
       "members": [
         "731780391031013387"
       ],
@@ -9,8 +9,8 @@
       "rerolls": 1,
       "last_roll": 0
     },
-    "team b": {
-      "name": "team b",
+    "teamb": {
+      "name": "teamb",
       "members": [
         "632453762383872030"
       ],
@@ -18,8 +18,8 @@
       "rerolls": 5,
       "last_roll": 0
     },
-    "team c": {
-      "name": "team c",
+    "teamc": {
+      "name": "teamc",
       "members": [
         "203664557762150401"
       ],
