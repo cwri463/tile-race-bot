@@ -80,15 +80,18 @@ with tiles_csv.open(newline="", encoding="utf-8") as fh:
 
         next_list: List[str] = [t.strip() for t in row.get("nextTiles", "").split(",") if t.strip()]
 
-        tiles[tile_id] = {
-            "item-name":    row["item-name"].strip(),
-            "item-picture": row["item-picture"].strip(),
-            "tile-desc":    row.get("tile-desc", "").strip(),
-            "coords":       coords,
-            "next":         next_list,
-            "points":       int(row.get("points") or 1),
-            "must-hit":     _parse_bool(row.get("must-hit", "")),
-        }
+     tile = {
+    "item-name":    row["item-name"],
+    "item-picture": row["item-picture"],
+    "tile-desc":    row.get("tile-desc", ""),
+    "coords": [
+        int(row["row"].strip()) if row["row"].strip() else 0,
+        int(row["col"].strip()) if row["col"].strip() else 0,
+    ],
+    "next": [n.strip() for n in row.get("nextTiles", "").split(",") if n.strip()],
+    "points": int(row.get("points", "1") or 1),
+    "must-hit": row.get("must-hit", "").strip().lower() in ["true", "1", "yes"],
+}
 
 print(f"✅  Parsed {len(tiles)} tiles from sheet")
 
