@@ -150,22 +150,12 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
     if user.bot:
         return
 
-    print(
-        f"[REACTION] {reaction.emoji!r} by {user.display_name} "
-        f"in #{reaction.message.channel.name}"
-    )
+    print(f"[REACTION] '{reaction.emoji}' by {user.display_name} in #{reaction.message.channel.name}")
 
-    # -------- approve / decline flow ------------------------------------- #
-    if reaction.message.channel.id == image_channel_id:
-        tname = GameUtils.find_team_name(reaction.message.author, teams)
-        if str(reaction.emoji) == CHECK_EMOJI:
-            await process_drop_approval(tname)
-        elif str(reaction.emoji) == CROSS_EMOJI:
-            await client.get_channel(notification_channel_id).send(
-                f"Drop declined for **{tname}** – try again."
-            )
-        return
-
+    tname = GameUtils.find_team_name(user, teams)
+    if not tname:
+        print(f"[ERROR] No team found for user {user.display_name} ({user.id})")
+        return  # <-- don't continue if we can't find the team
     # -------- fork choice handling --------------------------------------- #
     tname = GameUtils.find_team_name(user, teams)
     pending = teams[tname].get("pending_paths")
