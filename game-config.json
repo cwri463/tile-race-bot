@@ -40,5 +40,13 @@
     "tile-size": 80,
     "player-size": 60
   },
-  "tiles": {}
+  "tiles": {
+    "tile0": {
+      "item-name": "",
+      "tile-desc": "Mama just called a man",
+      "item-picture": "Npc_man",
+      "points": 1,
+      "must-hit": true
+    }
+  }
 }
