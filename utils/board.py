@@ -87,41 +87,52 @@ def generate_board(tiles: Dict[str, Dict[str, Any]],
             cx2, cy2 = _tile_center(nr, nc, tile_size)
             _draw_arrow(canvas, cx1, cy1, cx2, cy2)
 
-    # ---------------- pass 3: team tokens -------------------------------- #
+     # ---------------- pass 3: team tokens ------------------------------- #
     if teams:
-        player_size = int(board_data.get("player-size", 40))
+        player_size  = int(board_data.get("player-size", 40))
         token_radius = player_size // 2
 
-        for idx, (tname, tdata) in enumerate(teams.items()):
-            tile_id = tdata["tile"]
+        # group teams by tile
+        by_tile: Dict[str, list[str]] = {}
+        for tname, tdata in teams.items():
+            by_tile.setdefault(tdata["tile"], []).append(tname)
+
+        for tile_id, team_list in by_tile.items():
             if tile_id not in tiles:
                 continue
-
             row, col = tiles[tile_id]["coords"]
-            cx, cy = _tile_center(row, col, tile_size)
+            cx, cy   = _tile_center(row, col, tile_size)
 
-            # stack multiple teams diagonally
-            offset = idx * (token_radius + 4)
-            px = cx - token_radius + offset
-            py = cy - token_radius + offset
+            # layout tokens in a 2×2 grid inside the square
+            grid_pos = [
+                (-token_radius, -token_radius),  # top-left
+                ( token_radius, -token_radius),  # top-right
+                (-token_radius,  token_radius),  # bottom-left
+                ( token_radius,  token_radius),  # bottom-right
+            ]
 
-            sprite_file = TOKEN_DIR / f"{tname}.png"
-            if sprite_file.is_file():
-                token = Image.open(sprite_file).convert("RGBA")
-                token = ImageProcess.player_image_resizer(token, board_data)
-                canvas.alpha_composite(token, (px, py))
-            else:
-                # coloured fallback
-                colour = tuple((hash(tname + str(i)) & 0x7F) + 64 for i in range(3)) + (255,)
-                draw = ImageDraw.Draw(canvas)
-                draw.ellipse([(px, py),
-                              (px + player_size, py + player_size)],
-                             fill=colour, outline=(255, 255, 255, 255), width=2)
-                crop = canvas.crop((px, py, px + player_size, py + player_size))
-                ImageProcess.add_text_to_image(crop, tname[:1].upper(),
-                                               font_size=player_size // 2)
-                canvas.alpha_composite(crop, (px, py))
+            for idx, tname in enumerate(team_list[:4]):           # max 4 tokens per tile
+                dx, dy = grid_pos[idx]
+                px = cx + dx
+                py = cy + dy
 
+                sprite_file = TOKEN_DIR / f\"{tname}.png\"
+                if sprite_file.is_file():
+                    token = Image.open(sprite_file).convert(\"RGBA\")
+                    token = ImageProcess.player_image_resizer(token, board_data)
+                    canvas.alpha_composite(token, (px - token_radius, py - token_radius))
+                else:
+                    colour = tuple((hash(tname+str(i)) & 0x7F)+64 for i in range(3)) + (255,)
+                    draw = ImageDraw.Draw(canvas)
+                    draw.ellipse(
+                        [(px - token_radius, py - token_radius),
+                         (px + token_radius, py + token_radius)],
+                        fill=colour, outline=(255,255,255,255), width=2)
+                    crop = canvas.crop((px - token_radius, py - token_radius,
+                                         px + token_radius, py + token_radius))
+                    ImageProcess.add_text_to_image(crop, tname[:1].upper(),
+                                                   font_size=player_size//2)
+                    canvas.alpha_composite(crop, (px - token_radius, py - token_radius))
     # ---------------- save ---------------------------------------------- #
     canvas.save("game_board.png")
     print(f"[board] saved game_board.png  ({width}×{height})")
