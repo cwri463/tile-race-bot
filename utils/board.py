@@ -1,173 +1,139 @@
-from PIL import Image, ImageOps
+from __future__ import annotations
+
+"""Board rendering helpers for the Tile‑Race bot (branching‑path edition).
+
+This module turns the data‑driven *tiles* dictionary (containing grid
+coordinates and outbound neighbours) into a single PNG called
+``game_board.png`` and saves it in the bot’s working directory.
+
+Key runtime expectations:
+-------------------------
+* ``tiles``  – dict produced by ``game-config.json`` where every value has
+  • ``coords``  – [row, col] **zero‑based**
+  • ``item-picture`` – filename found under ``images/``
+  • ``item-name`` – title text shown on the tile
+  • ``next`` – list[str] of following tile IDs (may be empty)
+* ``board_data`` – typically comes from ``board-config`` section and must
+  include ``tile-size`` (square size in px).
+
+The image is laid out on an orthogonal grid with a constant gutter so it
+remains readable even with diagonal edges.  All maths stay integer‑only
+so Pillow anti‑aliasing isn’t triggered unnecessarily.
+"""
+
+from pathlib import Path
+import math
+from typing import Dict, Tuple, Any, List
+
+from PIL import Image, ImageDraw
+
 from utils.image_processor import ImageProcess
 
+__all__ = ["generate_board"]
 
-class Board:
-    def get_teams_with_number(teams_dict, number):
-        '''Function to get teams with a specific tile number'''
-        matching_teams = []
-        for team_name, team_info in teams_dict.items():
-            if team_info.get("tile") == number:
-                matching_teams.append(team_name)
-        return matching_teams
+# ---------------------------------------------------------------------------
+# Tunables
+# ---------------------------------------------------------------------------
+TILE_GUTTER = 10              # px between tiles
+ARROW_WIDTH = 4               # px
+ARROW_HEAD_LEN = 12           # px length of arrow‑head sides
+ARROW_COLOUR = (255, 255, 255, 255)  # white, fully opaque
 
-
-    def generate_board(tiles, board_data, teams):
-        '''Function to generate and save the game board image'''
-        # Open the background image of the game board
-        image = Image.open(r"./images/board_background2.jpg")
-        x, y = 90, 15  # Initial position to paste tiles on the board
-        tile_counter = 0  # Counter for tracking the tile number
-
-        # Loop through each tile and process it
-        for tile in tiles:
-            # Open the image of the current tile item and standardize the size
-            img = Image.open(rf"images/{tiles[tile]['item-picture']}")
-            img = ImageProcess.image_resizer(img, board_data)
-            width, height = img.size
-            new_width = width + 95
-            new_height = height + 95
-
-            # Resize the image and add a white background
-            result = Image.new(img.mode, (new_width, new_height), (255, 255, 255))
-            result.paste(img, (50, 50), mask=img)
-
-            # Add a black border to the tile
-            border_size = 2
-            bordered_img = ImageOps.expand(result, border=border_size, fill=(0, 0, 0))
-
-            # Add item name as text to the tile image
-            item_name = tiles[tile]["item-name"]
-            ImageProcess.add_text_to_image(bordered_img, item_name)
-
-            # Paste the tile on the game board
-            image.paste(bordered_img, (x, y), mask=bordered_img)
-
-            # Get teams located on this tile
-            matching_teams = Board.get_teams_with_number(teams, tile_counter)
-
-            # Paste team icons on the tile for each matching team
-            if matching_teams:
-                team_counter = 0
-                team_placement_x = 15
-                team_placement_y = 15
-                for team in matching_teams:
-                    player_image = Image.open(rf"images/playericons/{teams[team]['team_icon']}")
-                    player_image = ImageProcess.player_image_resizer(player_image, board_data)
-                    image.paste(player_image, (x + team_placement_x, y + team_placement_y), 
-                                mask=player_image)
-
-                    # Adjust placement coordinates for next team
-                    team_counter += 1
-                    if team_counter == 1:
-                        team_placement_x += 90
-                        team_placement_y += 65
-                    elif team_counter == 2:
-                        team_placement_x -= 90
-                    elif team_counter == 3:
-                        team_placement_x += 90
-                        team_placement_y -= 65
-                    elif team_counter == 4:
-                        pass
-
-            tile_counter += 1 # Increment tile counter for the next tile placement
-            end_tile = len(tiles) # Get the counter for the final tile
-
-            # Update position for the next tile placement based on the tile number
-            if tile_counter < 11:
-                start_x = x + 2 * board_data["tile-size"]
-                end_x = start_x + 50
-                end_y = y + board_data["tile-size"] + 10
-                ImageProcess.add_arrow(image, start_x, y, end_x, end_y, tile_counter, end_tile)
-                x = x + bordered_img.size[0] + 40 # Move right for the next tile in the same row
-
-            elif tile_counter >= 11 and tile_counter <= 12:
-                end_x = x + 10 + board_data["tile-size"]
-                start_y = y + board_data["tile-size"] * 2 + 15
-                end_y = start_y + 20
-                ImageProcess.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
-                y = y + bordered_img.size[1] + 25 # Move down for the next row of tiles
-
-            elif tile_counter > 12 and tile_counter < 17:
-                end_x = x - 30
-                end_y = y + board_data["tile-size"] + 10
-                ImageProcess.add_arrow(image, x, y, end_x, end_y, tile_counter, end_tile)
-                x = x - bordered_img.size[0] - 40 # Move left for the next tile in the same row
-
-            elif tile_counter >= 17 and tile_counter <= 18:
-                end_x = x + 10 + board_data["tile-size"]
-                start_y = y + board_data["tile-size"] * 2 + 15
-                end_y = start_y + 20
-                ImageProcess.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
-                y = y + bordered_img.size[1] + 25  # Move down for the next row of tiles
-
-            elif tile_counter > 18 and tile_counter < 23:
-                start_x = x + 2 * board_data["tile-size"]
-                end_x = start_x + 50
-                end_y = y + board_data["tile-size"] + 10
-                ImageProcess.add_arrow(image, start_x, y, end_x, end_y, tile_counter, end_tile)
-                x = x + bordered_img.size[0] + 40 # Move right for the next tile in the same row
-
-            elif tile_counter >= 23 and tile_counter <= 24:
-                end_x = x + 10 + board_data["tile-size"]
-                start_y = y + board_data["tile-size"] * 2 + 15
-                end_y = start_y + 20
-                ImageProcess.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
-                y = y + bordered_img.size[1] + 25 # Move down for the next row of tiles
-            
-            elif tile_counter > 24 and tile_counter < 30:
-                end_x = x - 30
-                end_y = y + board_data["tile-size"] + 10
-                ImageProcess.add_arrow(image, x, y, end_x, end_y, tile_counter, end_tile)
-                x = x - bordered_img.size[0] - 40 # Move left for the next tile in the same row
-
-            elif tile_counter >= 30 and tile_counter <= 34:
-                end_x = x + 10 + board_data["tile-size"]
-                start_y = y
-                end_y = start_y - 15
-                ImageProcess.add_arrow(image, x, end_y, end_x, start_y, tile_counter, end_tile)
-                y = y - bordered_img.size[1] - 25 # Move down for the next row of tiles
-            
-            elif tile_counter > 34 and tile_counter < 40:
-                end_x = x - 30
-                end_y = y + board_data["tile-size"] + 10
-                ImageProcess.add_arrow(image, x, y, end_x, end_y, tile_counter, end_tile)
-                x = x - bordered_img.size[0] - 40 # Move left for the next tile in the same row
-
-            elif tile_counter >= 40 and tile_counter <= 41:
-                end_x = x + 10 + board_data["tile-size"]
-                start_y = y + board_data["tile-size"] * 2 + 15
-                end_y = start_y + 20
-                ImageProcess.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
-                y = y + bordered_img.size[1] + 25 # Move down for the next row of tiles
-
-            elif tile_counter > 41 and tile_counter < 46:
-                start_x = x + 2 * board_data["tile-size"]
-                end_x = start_x + 50
-                end_y = y + board_data["tile-size"] + 10
-                ImageProcess.add_arrow(image, start_x, y, end_x, end_y, tile_counter, end_tile)
-                x = x + bordered_img.size[0] + 40 # Move right for the next tile in the same row
-
-            elif tile_counter >= 46 and tile_counter <= 47:
-                end_x = x + 10 + board_data["tile-size"]
-                start_y = y + board_data["tile-size"] * 2 + 15
-                end_y = start_y + 20
-                ImageProcess.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
-                y = y + bordered_img.size[1] + 25 # Move down for the next row of tiles
-
-            elif tile_counter > 47 and tile_counter < 52:
-                end_x = x - 30
-                end_y = y + board_data["tile-size"] + 10
-                ImageProcess.add_arrow(image, x, y, end_x, end_y, tile_counter, end_tile)
-                x = x - bordered_img.size[0] - 40 # Move left for the next tile in the same row
-
-            elif tile_counter >= 52:
-                end_x = x + 10 + board_data["tile-size"]
-                start_y = y + board_data["tile-size"] * 2 + 15
-                end_y = start_y + 20
-                ImageProcess.add_arrow(image, x, start_y, end_x, end_y, tile_counter, end_tile)
-                y = y + bordered_img.size[1] + 25 # Move down for the next row of tiles
+IMG_DIR = Path("images")
 
 
-        # Save the final game board image
-        image.save('game_board.png')
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+def _tile_top_left(row: int, col: int, tile_size: int) -> Tuple[int, int]:
+    """Calculate top‑left pixel for a tile at (row, col) in the grid."""
+    x = TILE_GUTTER + col * (tile_size + TILE_GUTTER)
+    y = TILE_GUTTER + row * (tile_size + TILE_GUTTER)
+    return x, y
+
+
+def _tile_center(row: int, col: int, tile_size: int) -> Tuple[int, int]:
+    """Return centre pixel of a tile (used for arrow start/end)."""
+    tlx, tly = _tile_top_left(row, col, tile_size)
+    cx = tlx + tile_size // 2
+    cy = tly + tile_size // 2
+    return cx, cy
+
+
+def _draw_arrow(canvas: Image.Image, x1: int, y1: int, x2: int, y2: int) -> None:
+    """Draw an arrow from (x1,y1) to (x2,y2) onto *canvas*.
+
+    Uses a straight line plus a small filled triangle for the arrow head.
+    """
+    draw = ImageDraw.Draw(canvas)
+    draw.line((x1, y1, x2, y2), fill=ARROW_COLOUR, width=ARROW_WIDTH)
+
+    # arrow‑head triangle points
+    angle = math.atan2(y2 - y1, x2 - x1)
+    left_angle = angle + math.radians(150)  # 30° either side of line
+    right_angle = angle - math.radians(150)
+
+    lx = x2 + ARROW_HEAD_LEN * math.cos(left_angle)
+    ly = y2 + ARROW_HEAD_LEN * math.sin(left_angle)
+    rx = x2 + ARROW_HEAD_LEN * math.cos(right_angle)
+    ry = y2 + ARROW_HEAD_LEN * math.sin(right_angle)
+
+    draw.polygon([(x2, y2), (lx, ly), (rx, ry)], fill=ARROW_COLOUR)
+
+
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+
+def generate_board(tiles: Dict[str, Dict[str, Any]],
+                   board_data: Dict[str, Any],
+                   teams: Dict[str, Any] | None = None) -> None:
+    """Render the entire board to *game_board.png*.
+
+    The *teams* param is currently ignored but kept for future per‑team
+    overlays (e.g., player icons on current tile).
+    """
+
+    # -------------------- canvas size ------------------------------------ #
+    tile_size = int(board_data["tile-size"])
+    max_row = max(t["coords"][0] for t in tiles.values())
+    max_col = max(t["coords"][1] for t in tiles.values())
+
+    width = (max_col + 1) * (tile_size + TILE_GUTTER) + TILE_GUTTER
+    height = (max_row + 1) * (tile_size + TILE_GUTTER) + TILE_GUTTER
+
+    canvas = Image.new("RGBA", (width, height), (34, 34, 34, 255))
+
+    # -------------------- pass 1: draw tiles ----------------------------- #
+    for tid, tdata in tiles.items():
+        row, col = map(int, tdata["coords"])
+        tlx, tly = _tile_top_left(row, col, tile_size)
+
+        # load + resize tile image
+        img_path = IMG_DIR / tdata["item-picture"]
+        if not img_path.is_file():
+            raise FileNotFoundError(f"Missing tile image: {img_path}")
+
+        tile_img = Image.open(img_path).convert("RGBA")
+        tile_img = ImageProcess.image_resizer(tile_img, {"tile-size": tile_size})
+        canvas.alpha_composite(tile_img, (tlx, tly))
+
+        # add text centred within the tile square
+        crop_box = canvas.crop((tlx, tly, tlx + tile_size, tly + tile_size))
+        ImageProcess.add_text_to_image(crop_box, tdata["item-name"])
+        canvas.alpha_composite(crop_box, (tlx, tly))
+
+    # -------------------- pass 2: draw arrows ---------------------------- #
+    for tid, tdata in tiles.items():
+        row, col = tdata["coords"]
+        x1, y1 = _tile_center(row, col, tile_size)
+        for nxt in tdata.get("next", []):
+            nrow, ncol = tiles[nxt]["coords"]
+            x2, y2 = _tile_center(nrow, ncol, tile_size)
+            _draw_arrow(canvas, x1, y1, x2, y2)
+
+    # -------------------- save result ------------------------------------ #
+    output = Path("game_board.png")
+    canvas.save(output)
+    print(f"[board] saved {output}  ({width}×{height})")
