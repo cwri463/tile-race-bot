@@ -43,10 +43,38 @@
   "tiles": {
     "tile0": {
       "item-name": "Man",
-      "tile-desc": "Mama just called a man",
+      "tile-desc": "",
       "item-picture": "Npc_man.png",
       "points": 1,
       "must-hit": true
+    },
+    "tile1": {
+      "item-name": "Pet",
+      "tile-desc": "",
+      "item-picture": "Abyssal_protector.png",
+      "points": 1,
+      "must-hit": false
+    },
+    "tile2": {
+      "item-name": "Arma Chest",
+      "tile-desc": "",
+      "item-picture": "Arma_chest.png",
+      "points": 1,
+      "must-hit": false
+    },
+    "tile3": {
+      "item-name": "Bob Shirt",
+      "tile-desc": "",
+      "item-picture": "Bob_shirt.png",
+      "points": 1,
+      "must-hit": false
+    },
+    "tile4": {
+      "item-name": "Herbi",
+      "tile-desc": "",
+      "item-picture": "Herbiboar.png",
+      "points": 1,
+      "must-hit": false
     }
   }
 }
