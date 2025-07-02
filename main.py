@@ -20,7 +20,9 @@ import networkx as nx
 from load_config import ETL
 from utils.board import generate_board  # ← function, not class
 from utils.game_functions import GameUtils
-
+# Emoji constants
+CHECK_EMOJI = "\N{WHITE HEAVY CHECK MARK}"   # ✅
+CROSS_EMOJI = "\N{CROSS MARK}"               # ❌
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # Discord client
@@ -96,22 +98,18 @@ async def on_message(message: discord.Message):
         return
 
     if message.channel.id == image_channel_id and message.attachments:
-        CHECK_EMOJI = "\N{WHITE HEAVY CHECK MARK}"   # ✅
-        CROSS_EMOJI = "\N{CROSS MARK}"               # ❌
-
-    try:
-        await message.add_reaction(CHECK_EMOJI)
-    except Exception as e:
-          print(f"[WARN] couldn’t add ✅ : {e}")
-
-    try:
-        await message.add_reaction(CROSS_EMOJI)
-    except Exception as e:
-        print(f"[WARN] couldn’t add ❌ : {e}")
         tname = GameUtils.find_team_name(message.author, teams)
         await client.get_channel(notification_channel_id).send(
             f"**{tname}** uploaded a drop – waiting for approval."
         )
+        try:
+            await message.add_reaction(CHECK_EMOJI)
+        except Exception as e:
+            print(f"[WARN] couldn’t add ✅ : {e}")
+        try:
+            await message.add_reaction(CROSS_EMOJI)
+        except Exception as e:
+            print(f"[WARN] couldn’t add ❌ : {e}")
         return
 
     if message.channel.id == notification_channel_id and message.content.strip().lower() == "!reroll":
