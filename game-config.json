@@ -42,9 +42,9 @@
   },
   "tiles": {
     "tile0": {
-      "item-name": "",
+      "item-name": "Man",
       "tile-desc": "Mama just called a man",
-      "item-picture": "Npc_man",
+      "item-picture": "Npc_man.png",
       "points": 1,
       "must-hit": true
     }
