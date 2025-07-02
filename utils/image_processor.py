@@ -1,43 +1,48 @@
 from __future__ import annotations
 """
 utils/image_processor.py – Pillow helpers
-• square tiles with a caption band inside the border
-• token resizer
-• straight arrow primitive
+-----------------------------------------
+* tile sprite maker (square, caption band inside)
+* token resizer
+* adaptive caption that shrinks to fit
+* straight arrow primitive
 """
 
 from pathlib import Path
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageFilter
+from typing import Dict, Any
 
 # --------------------------------------------------------------------------- #
 # Constants
 # --------------------------------------------------------------------------- #
-FONT_PATH          = Path("assets/fonts/DejaVuSans-Bold.ttf")
-DEFAULT_FONT_SIZE  = 14
-BORDER_COLOUR      = (255, 255, 255, 255)
-TILE_BG            = (45, 45, 45, 255)
-TEXT_COLOUR        = (255, 255, 255, 255)
+FONT_PATH         = Path("assets/fonts/DejaVuSans-Bold.ttf")
+DEFAULT_FONT_SIZE = 14
+BORDER_COLOUR     = (255, 255, 255, 255)
+TILE_BG           = (45, 45, 45, 255)
+TEXT_COLOUR       = (255, 255, 255, 255)
 
 
 class ImageProcess:
     # ------------------------------------------------------------------- #
-    # Tile sprites
+    # Tile sprite
     # ------------------------------------------------------------------- #
     @staticmethod
-    def image_resizer(img: Image.Image, board_data: dict) -> Image.Image:
-        """Return a square sprite exactly tile-size × tile-size with a caption band."""
-        tile_size    = int(board_data["tile-size"])
-        caption_band = 20  # px reserved for caption
+    def image_resizer(img: Image.Image, ctx: Dict[str, Any]) -> Image.Image:
+        """
+        Return a square sprite (tile) with a bottom caption band.
+        ctx must contain 'tile-size'.
+        """
+        tile_size    = int(ctx["tile-size"])
+        caption_band = 20                                   # px reserved
 
-        # blank tile
         tile = Image.new("RGBA", (tile_size, tile_size), TILE_BG)
 
-        # scale artwork
+        # scale artwork to fit above caption band
         max_art_h = tile_size - caption_band - 6
         img = img.convert("RGBA")
         img.thumbnail((tile_size - 6, max_art_h), Image.Resampling.LANCZOS)
 
-        # centre-paste
+        # center-paste
         x = (tile_size - img.width) // 2
         y = (max_art_h - img.height) // 2 + 3
         tile.alpha_composite(img, (x, y))
@@ -49,11 +54,11 @@ class ImageProcess:
         return tile
 
     # ------------------------------------------------------------------- #
-    # Player tokens
+    # Player token
     # ------------------------------------------------------------------- #
     @staticmethod
-    def player_image_resizer(img: Image.Image, board_data: dict) -> Image.Image:
-        player_size = int(board_data["player-size"])
+    def player_image_resizer(img: Image.Image, ctx: Dict[str, Any]) -> Image.Image:
+        player_size = int(ctx["player-size"])
         img = img.convert("RGBA")
         img.thumbnail((player_size, player_size), Image.Resampling.LANCZOS)
         token = Image.new("RGBA", (player_size, player_size), (0, 0, 0, 0))
@@ -63,7 +68,7 @@ class ImageProcess:
         return token
 
     # ------------------------------------------------------------------- #
-    # Captions
+    # Caption helper
     # ------------------------------------------------------------------- #
     @staticmethod
     def add_text_to_image(image: Image.Image, text: str,
@@ -71,7 +76,7 @@ class ImageProcess:
         if not text:
             return
 
-        target_w  = image.width - 8            # 4-px margin
+        target_w  = image.width - 8
         font_size = font_size or DEFAULT_FONT_SIZE
         while font_size >= 8:
             try:
@@ -81,11 +86,11 @@ class ImageProcess:
             text_w = ImageDraw.Draw(image).textlength(text, font=font)
             if text_w <= target_w:
                 break
-            font_size -= 1                     # shrink until it fits
+            font_size -= 1
 
         draw = ImageDraw.Draw(image)
         x = (image.width - text_w) // 2
-        y = image.height - font_size - 2       # inside border
+        y = image.height - font_size - 2
         draw.text((x, y), text, font=font, fill=TEXT_COLOUR)
 
     # ------------------------------------------------------------------- #
