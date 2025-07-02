@@ -1,16 +1,17 @@
 name: Sync board from Google Sheet
 
 on:
-  workflow_dispatch:      # manual “Run workflow” button
+  workflow_dispatch:          # manual “Run workflow” button
   schedule:
-    - cron: "0 6 * * *"   # every day at 06:00 UTC
+    - cron: "0 6 * * *"       # every day at 06:00 UTC
 
 jobs:
   update:
     runs-on: ubuntu-latest
     env:
-  SHEET_CSV_URL:        ${{ secrets.SHEET_CSV_URL }}
-  SHEET_TEAMS_CSV_URL:  ${{ secrets.SHEET_TEAMS_CSV_URL }}
+      SHEET_CSV_URL:        ${{ secrets.SHEET_CSV_URL }}
+      SHEET_TEAMS_CSV_URL:  ${{ secrets.SHEET_TEAMS_CSV_URL }}
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -32,8 +33,8 @@ jobs:
           git config user.email "sheet-bot@users.noreply.github.com"
           git add game-config.json
           if git diff --cached --quiet; then
-              echo "No changes to commit."
+            echo "No changes to commit."
           else
-              git commit -m "auto: board updated from Google Sheet"
-              git push
+            git commit -m "auto: board updated from Google Sheet"
+            git push
           fi
