@@ -32,15 +32,15 @@ tiles = {}
 with tiles_csv.open(newline="", encoding="utf-8") as fh:
     reader = csv.DictReader(fh)
     for idx, row in enumerate(reader):
-        tiles[f"tile{idx}"] = {
-            "item-name":    row["item-name"].strip(),
-            "tile-desc":    row["tile-desc"].strip(),
-            "item-picture": row["item-picture"].strip(),
-            "coords":       [int(row["row"]), int(row["col"])],
-            "next":         [t.strip() for t in row["nextTiles"].split(",") if t.strip()],
-            "points":       int(row.get("points") or 1),
-            "must-hit":     str(row.get("must-hit", "")).lower() == "true",
-        }
+        tile = {
+                    "item-name":   row["item-name"],
+                    "item-picture": row["item-picture"],
+                    "tile-desc":    row.get("tile-desc", ""),
+                    "coords":       [int(row["row"]), int(row["col"])],
+                    "next":         [t.strip() for t in row.get("nextTiles", "").split(",") if t.strip()],
+                    "points":       int(row.get("points", "1") or 1),
+                    "must-hit":     row.get("must-hit", "").strip().lower() == "true",
+                }
 
 # ---------------- teams ---------------------------------------------------
 teams = {}
