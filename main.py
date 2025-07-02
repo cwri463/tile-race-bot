@@ -66,31 +66,42 @@ async def refresh_board() -> None:
 # --------------------------------------------------------------------------- #
 async def advance_team(team: Dict[str, Any], dice: int) -> None:
     cur = team["tile"]
-    paths = [
-        p
-        for p in nx.all_simple_paths(GRAPH, cur, None, cutoff=dice)
-        if len(p) - 1 == dice
-    ]
+
+    # Generate all paths up to N steps (dice)
+    paths = []
+    for target in GRAPH.nodes:
+        try:
+            for path in nx.all_simple_paths(GRAPH, source=cur, target=target, cutoff=dice):
+                if len(path) - 1 == dice:
+                    paths.append(path)
+        except nx.NetworkXNoPath:
+            continue
+        except nx.NodeNotFound:
+            continue
+
     if not paths:
-        return
-    if len(paths) == 1:
-        team["tile"] = paths[0][-1]
+        print(f"[INFO] No available paths from {cur} using roll {dice}")
         return
 
-    # prompt fork choice
+    if len(paths) == 1:
+        team["tile"] = paths[0][-1]
+        print(f"[MOVE] {team['name']} auto-moved to {team['tile']}")
+        return
+
+    # Fork choice needed
     channel = client.get_channel(notification_channel_id)
     prompt_msg = await channel.send(
         f"**{team['name']}**, you rolled **{dice}** – choose a path:"
     )
     emoji_map, options = {}, ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫"]
-    for idx, path in enumerate(paths[: len(options)]):
+    for idx, path in enumerate(paths[:len(options)]):
         dest, emoji = path[-1], options[idx]
         emoji_map[emoji] = dest
         await prompt_msg.add_reaction(emoji)
         await channel.send(f"{emoji} → {tiles[dest]['item-name']}")
+
     team["pending_paths"] = emoji_map
-
-
+    print(f"[FORK] Awaiting choice from {team['name']} for {len(paths)} paths")
 # --------------------------------------------------------------------------- #
 # Discord events
 # --------------------------------------------------------------------------- #
