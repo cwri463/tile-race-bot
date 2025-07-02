@@ -63,8 +63,7 @@
         1
       ],
       "next": [
-        "tile3",
-        "tile4"
+        "tile3"
       ],
       "points": 1,
       "must-hit": false
