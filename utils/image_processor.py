@@ -28,30 +28,29 @@ class ImageProcess:
     """Stateless helpers used by utils/board.py."""
 
     # ---------------------- Tile sprites ------------------------------ #
-    @staticmethod
-    def image_resizer(img: Image.Image, board_data: dict) -> Image.Image:
-        """Return a *square* sprite exactly tile-size × tile-size.
+   @staticmethod
+def image_resizer(img: Image.Image, board_data: dict) -> Image.Image:
+    """Return a square tile with space reserved for a caption *inside* the border."""
+    tile_size   = int(board_data["tile-size"])
+    caption_band = 20                         # px reserved at bottom
 
-        1. Scales *img* to fit inside the square, preserving aspect ratio.
-        2. Pastes it centred on a dark background.
-        3. Adds a 2‑pixel white border.
-        """
-        tile_size = int(board_data["tile-size"])
+    # 1. Create blank tile
+    tile = Image.new("RGBA", (tile_size, tile_size), TILE_BG)
 
-        # 1️⃣  resize art to fit inside the square
-        img = img.convert("RGBA")
-        img.thumbnail((tile_size - 4, tile_size - 4), Image.Resampling.LANCZOS)
+    # 2. Scale artwork to fit in (tile_size - caption_band)
+    available_h = tile_size - caption_band - 6         # 6 px breathing room
+    img = img.convert("RGBA")
+    img.thumbnail((tile_size - 6, available_h), Image.Resampling.LANCZOS)
 
-        # 2️⃣  create blank tile & centre‑paste the art
-        tile = Image.new("RGBA", (tile_size, tile_size), TILE_BG)
-        x = (tile_size - img.width)  // 2
-        y = (tile_size - img.height) // 2
-        tile.alpha_composite(img, (x, y))
+    # 3. Center-paste art
+    x = (tile_size - img.width)  // 2
+    y = (available_h - img.height) // 2 + 3            # +3 so it isn’t glued to top
+    tile.alpha_composite(img, (x, y))
 
-        # 3️⃣  border
-        draw = ImageDraw.Draw(tile)
-        draw.rectangle([(0, 0), (tile_size - 1, tile_size - 1)], outline=BORDER_COLOUR, width=2)
-        return tile
+    # 4. White border
+    draw = ImageDraw.Draw(tile)
+    draw.rectangle([(0, 0), (tile_size - 1, tile_size - 1)], outline=BORDER_COLOUR, width=2)
+    return tile
 
     # ---------------------- Player tokens ----------------------------- #
     @staticmethod
@@ -87,7 +86,7 @@ class ImageProcess:
         text_height = font_size
 
         x = (image.width - text_width) // 2
-        y = image.height - text_height + 4  # below the square tile
+        y = image.height - text_height - 2 
 
         draw.text((x, y), text, font=font, fill=TEXT_COLOUR)
 
