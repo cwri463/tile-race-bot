@@ -255,6 +255,7 @@ if __name__ == "__main__":
     secrets = ETL.load_secrets()
 
     # 'develop' for hidden develop channels 'production' for live channels 
+    if "develop" in secrets:
     secrets = secrets["develop"]
 
     image_channel_id = secrets["image_channel_id"]  # Channel ID for image submissions
