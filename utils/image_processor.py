@@ -61,22 +61,30 @@ class ImageProcess:
         return token
 
     # ---------------------- Captions ---------------------------------- #
-    @staticmethod
+   @staticmethod
     def add_text_to_image(image: Image.Image, text: str, *, font_size: int | None = None) -> None:
         if not text:
             return
+
+        target_w = image.width - 8          # 4-px margin either side
         font_size = font_size or DEFAULT_FONT_SIZE
-        try:
-            font = ImageFont.truetype(str(FONT_PATH), font_size)
-        except FileNotFoundError:
-            font = ImageFont.load_default()
+
+    # Try progressively smaller fonts until it fits
+        while font_size >= 8:
+            try:
+                font = ImageFont.truetype(str(FONT_PATH), font_size)
+            except FileNotFoundError:
+                font = ImageFont.load_default()
+            text_w = ImageDraw.Draw(image).textlength(text, font=font)
+            if text_w <= target_w:
+               break
+            font_size -= 1                  # step down size
 
         draw = ImageDraw.Draw(image)
-        text_w = draw.textlength(text, font=font)
-        text_h = font_size
         x = (image.width - text_w) // 2
-        y = image.height - text_h - 2  # 2 px above bottom border
+        y = image.height - font_size - 2    # 2 px above border
         draw.text((x, y), text, font=font, fill=TEXT_COLOUR)
+
 
     # ---------------------- Arrow primitive --------------------------- #
     @staticmethod
