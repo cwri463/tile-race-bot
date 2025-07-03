@@ -235,6 +235,12 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
 # --------------------------------------------------------------------------- #
 if __name__ == "__main__":
     board_data, tiles, teams = ETL.load()
+    # Ensure required counters exist on every team dict
+for tdata in teams.values():
+    tdata.setdefault("skips", 0)
+    tdata.setdefault("rerolls", 0)
+    tdata.setdefault("last_roll", 0)   # (optional safety for reroll logic)
+    
     image_channel_id       = int(os.getenv("IMAGE_CHANNEL_ID"))
     notification_channel_id = int(os.getenv("NOTIFICATION_CHANNEL_ID"))
     board_channel_id        = int(os.getenv("BOARD_CHANNEL_ID"))
