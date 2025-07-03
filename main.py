@@ -212,7 +212,39 @@ async def skip_slash(inter: discord.Interaction):
         return
     await inter.response.defer()
     await perform_skip(tname)
+    
+# ---- Slash command: /syncsheet ----------------------------------------
+@TREE.command(
+    name="syncsheet",
+    description="Admin: reload board from Google Sheet CSVs",
+    guild=GUILD,
+)
+@appcmd.default_permissions(manage_guild=True)   # requires Manage Guild
+async def syncsheet_slash(inter: discord.Interaction):
+    await inter.response.defer(thinking=True)
 
+    try:
+        from tools.sheet_loader import load_from_sheet
+        global board_data, tiles, teams, GRAPH   # overwrite in-memory state
+
+        board_data, tiles, teams = load_from_sheet()
+
+        # rebuild graph
+        GRAPH.clear()
+        for tid, td in tiles.items():
+            for nxt in td.get("next", []):
+                GRAPH.add_edge(tid, nxt)
+
+        # refresh board PNG
+        await refresh_board()
+
+        await inter.followup.send(
+            f"Sheet imported – **{len(tiles)} tiles**, **{len(teams)} teams**"
+        )
+    except Exception as e:
+        await inter.followup.send(f"❌ Import failed: `{e}`", ephemeral=True)
+        raise  # still log full traceback
+        
 # ── Events ───────────────────────────────────────────────────────────────
 @bot.event
 async def on_ready():
