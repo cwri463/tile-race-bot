@@ -87,13 +87,25 @@ async def refresh_board():
 # Movement logic
 # --------------------------------------------------------------------------- #
 async def choose_path(team: Dict[str, Any], paths: List[List[str]]):
+    """
+    Prompt a team to choose a fork.
+    Duplicate destinations are collapsed so each tile appears only once.
+    """
+    # keep first path to each unique destination
+    unique: Dict[str, List[str]] = {}
+    for p in paths:
+        dest = p[-1]
+        if dest not in unique:
+            unique[dest] = p
+
     channel = client.get_channel(notification_channel_id)
     prompt  = await channel.send(f"**{team['name']}**, choose your path:")
 
     emoji_map = {}
-    for idx, p in enumerate(paths[: len(FORK_EMOJIS)]):
+    for idx, (dest, path) in enumerate(unique.items()):
+        if idx >= len(FORK_EMOJIS):   # safety: max 6 options
+            break
         emoji = FORK_EMOJIS[idx]
-        dest  = p[-1]
         emoji_map[emoji] = dest
         await prompt.add_reaction(emoji)
         await channel.send(f"{emoji} → {tiles[dest]['item-name']}")
