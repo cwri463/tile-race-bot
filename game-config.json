@@ -174,7 +174,7 @@
         3
       ],
       "next": [
-        "tile10"
+        "tile12"
       ],
       "points": 1,
       "must-hit": false
@@ -188,7 +188,7 @@
         2
       ],
       "next": [
-        "tile11"
+        "tile13"
       ],
       "points": 1,
       "must-hit": false
@@ -202,7 +202,7 @@
         3
       ],
       "next": [
-        "tile12"
+        "tile10"
       ],
       "points": 1,
       "must-hit": false
@@ -214,6 +214,20 @@
       "coords": [
         8,
         4
+      ],
+      "next": [
+        "tile11"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile13": {
+      "item-name": "Finish",
+      "item-picture": "Finish.png",
+      "tile-desc": "",
+      "coords": [
+        -3,
+        -1
       ],
       "next": [],
       "points": 1,
