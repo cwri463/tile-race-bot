@@ -99,6 +99,119 @@
         2,
         3
       ],
+      "next": [
+        "tile5"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile5": {
+      "item-name": "Basilisk Jaw",
+      "item-picture": "Basilisk_jaw.png",
+      "tile-desc": "",
+      "coords": [
+        3,
+        1
+      ],
+      "next": [
+        "tile4",
+        "tile5"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile6": {
+      "item-name": "Giant Mole",
+      "item-picture": "Giant_mole.png",
+      "tile-desc": "",
+      "coords": [
+        4,
+        1
+      ],
+      "next": [
+        "tile7"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile7": {
+      "item-name": "Mimic",
+      "item-picture": "Mimic.png",
+      "tile-desc": "",
+      "coords": [
+        5,
+        2
+      ],
+      "next": [
+        "tile4"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile8": {
+      "item-name": "Golden Tench",
+      "item-picture": "Golden_tench.png",
+      "tile-desc": "",
+      "coords": [
+        6,
+        3
+      ],
+      "next": [
+        "tile5"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile9": {
+      "item-name": "Nightmare",
+      "item-picture": "The_nightmare.png",
+      "tile-desc": "",
+      "coords": [
+        7,
+        3
+      ],
+      "next": [
+        "tile6"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile10": {
+      "item-name": "Scurrius",
+      "item-picture": "Scurrius.png",
+      "tile-desc": "",
+      "coords": [
+        8,
+        2
+      ],
+      "next": [
+        "tile7"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile11": {
+      "item-name": "Wintertodt",
+      "item-picture": "Wt.png",
+      "tile-desc": "",
+      "coords": [
+        8,
+        3
+      ],
+      "next": [
+        "tile8"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile12": {
+      "item-name": "Sulfur blades",
+      "item-picture": "Sulfur_blades.png",
+      "tile-desc": "",
+      "coords": [
+        8,
+        4
+      ],
       "next": [],
       "points": 1,
       "must-hit": false
