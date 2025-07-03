@@ -244,6 +244,12 @@ if __name__ == "__main__":
     for tid, tdata in tiles.items():
         for nxt in tdata.get("next", []):
             GRAPH.add_edge(tid, nxt)
+# ensure every team dict has the crucial fields
+for data in teams.values():
+    data.setdefault("rerolls", 0)
+    data.setdefault("skips",    0)
+    data.setdefault("name", "")           # if you rely on it elsewhere
+    data.setdefault("last_roll", 0)       # keeps perform_reroll safe
 
     token = os.getenv("DISCORD_TOKEN")
     if not token:
