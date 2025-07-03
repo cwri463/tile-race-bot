@@ -164,19 +164,36 @@ async def process_drop_approval(tname: str):
 # ======================= END PART 2/3 =======================
 
 # ========================== main.py (PART 3/3) ==========================
-"""Discord event-handlers, slash commands (/grid, /reroll, /skip) and the
-entry-point."""
-from discord import app_commands as appcmd   
-from discord.app_commands import check 
+"""Discord event-handlers, slash commands, and entry-point.
+   Commands: /grid  /reroll  /skip  /syncsheet
+   /syncsheet is ROLE-gated (see ROLE_ID below).
+"""
 
-# ── optional one-guild fast-sync ─────────────────────────────────────────
-# Add DISCORD_GUILD_ID to Railway (server-ID as integer). If unset, commands
-# register globally (may take up to 1 h to appear).
+# -----------------------------------------------------------------------
+# Imports specific to this part
+# -----------------------------------------------------------------------
+from discord import app_commands as appcmd
+from discord.app_commands import check
+
+# -----------------------------------------------------------------------
+# Fast per-guild sync (DISCORD_GUILD_ID env-var optional)
+# -----------------------------------------------------------------------
 GUILD_ID = int(os.getenv("DISCORD_GUILD_ID", "0") or 0)
 GUILD    = discord.Object(id=GUILD_ID) if GUILD_ID else None
-# ------------------------------------------------------------------------
 
-# ---- Slash command: /grid ----------------------------------------------
+# -----------------------------------------------------------------------
+# Role-gate helper for /syncsheet
+# -----------------------------------------------------------------------
+ROLE_ID = 905218059604725801          # 🔁 replace with your “Bot Admins” role ID
+
+def has_role(role_id: int):
+    async def _predicate(inter: discord.Interaction):
+        return any(r.id == role_id for r in inter.user.roles)
+    return check(_predicate)
+
+# -----------------------------------------------------------------------
+# Slash command: /grid
+# -----------------------------------------------------------------------
 @TREE.command(name="grid",
               description="Generate an empty planning grid",
               guild=GUILD)
@@ -185,7 +202,9 @@ async def grid_slash(inter: discord.Interaction):
     path = render_empty_grid(board_data, tiles)
     await inter.followup.send(file=discord.File(path))
 
-# ---- Slash command: /reroll --------------------------------------------
+# -----------------------------------------------------------------------
+# Slash command: /reroll
+# -----------------------------------------------------------------------
 @TREE.command(name="reroll",
               description="Use one reroll to roll again from your previous spot",
               guild=GUILD)
@@ -200,7 +219,9 @@ async def reroll_slash(inter: discord.Interaction):
     await inter.response.defer()
     await perform_reroll(tname)
 
-# ---- Slash command: /skip ----------------------------------------------
+# -----------------------------------------------------------------------
+# Slash command: /skip
+# -----------------------------------------------------------------------
 @TREE.command(name="skip",
               description="Spend one skip token to roll ahead without completing the tile",
               guild=GUILD)
@@ -215,28 +236,18 @@ async def skip_slash(inter: discord.Interaction):
     await inter.response.defer()
     await perform_skip(tname)
 
-# ── Role-gate helper ────────────────────────────────────────────────
-ROLE_ID = 905218059604725801          
-
-def has_role(role_id: int):
-    async def _predicate(inter: discord.Interaction):
-        return any(r.id == role_id for r in inter.user.roles)
-    return check(_predicate)
-# --------------------------------------------------------------------
-
-# ---- Slash command: /syncsheet ----------------------------------------
-@TREE.command(
-    name="syncsheet",
-    description="Admin: reload board from Google Sheet CSVs",
-    guild=GUILD,
-)
-@appcmd.default_permissions(manage_guild=False)   # requires Manage Guild
+# -----------------------------------------------------------------------
+# Slash command: /syncsheet  (ROLE-gated)
+# -----------------------------------------------------------------------
+@TREE.command(name="syncsheet",
+              description="Admin: reload board from Google Sheet CSVs",
+              guild=GUILD)
+@has_role(ROLE_ID)          # ✅ only members with this role can run it
 async def syncsheet_slash(inter: discord.Interaction):
     await inter.response.defer(thinking=True)
-
     try:
         from tools.sheet_loader import load_from_sheet
-        global board_data, tiles, teams, GRAPH   # overwrite in-memory state
+        global board_data, tiles, teams, GRAPH
 
         board_data, tiles, teams = load_from_sheet()
 
@@ -246,31 +257,30 @@ async def syncsheet_slash(inter: discord.Interaction):
             for nxt in td.get("next", []):
                 GRAPH.add_edge(tid, nxt)
 
-        # refresh board PNG
         await refresh_board()
-
         await inter.followup.send(
             f"Sheet imported – **{len(tiles)} tiles**, **{len(teams)} teams**"
         )
     except Exception as e:
         await inter.followup.send(f"❌ Import failed: `{e}`", ephemeral=True)
-        raise  # still log full traceback
-        
-# ── Events ───────────────────────────────────────────────────────────────
+        raise
+
+# -----------------------------------------------------------------------
+# Events
+# -----------------------------------------------------------------------
 @bot.event
 async def on_ready():
-    # ── remove lingering GLOBAL commands so you don’t see duplicates ──
-    if GUILD:                      # we are using per-guild commands
-        TREE.clear_commands(guild=None)   # wipe globals once
+    # remove lingering GLOBAL commands (prevents duplicates)
+    if GUILD:
+        TREE.clear_commands(guild=None)
 
-    # (re)-register commands for the chosen scope
     synced = await TREE.sync(guild=GUILD) if GUILD else await TREE.sync()
     print("[SLASH] synced:", [c.name for c in synced])
 
-    # normal startup housekeeping
     await bot.get_channel(notification_channel_id).purge(check=is_me)
     await refresh_board()
     print(f"[READY] {bot.user} online ✔")
+
 @bot.event
 async def on_message(msg: discord.Message):
     if is_me(msg):
@@ -291,7 +301,7 @@ async def on_message(msg: discord.Message):
                 pass
         return
 
-    # legacy text commands (keep or delete)
+    # legacy text commands (optional)
     if content == "!skip" and msg.channel.id == notification_channel_id and tname:
         await perform_skip(tname)
         return
@@ -325,7 +335,9 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
             await refresh_board()
             return
 
-# ── Entry-point ─────────────────────────────────────────────────────────
+# -----------------------------------------------------------------------
+# Entry-point
+# -----------------------------------------------------------------------
 if __name__ == "__main__":
     board_data, tiles, teams = ETL.load()
 
