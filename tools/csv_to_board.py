@@ -85,13 +85,14 @@ with teams_csv.open(newline="", encoding="utf-8") as fh:
         if not name:
             continue
         teams[name] = {
-            "name":      name,
-            "members":   [m.strip() for m in row.get("member-ids", "").split(",") if m.strip()],
-            "tile":      row.get("startTile", "tile0").strip(),
-            "rerolls":   int(row.get("rerolls") or 0),
-            "last_roll": 0,
-        }
-
+             "name":       row["team-name"],
+             "members":    row["member-ids"].split(";"),
+               "tile":       row["startTile"].strip(),
+              "rerolls":    int(row.get("rerolls", "0")),
+              "skips":      int(row.get("skips", "0")),     
+              "roleId":     row.get("roleId", "").strip(),
+                  }
+    
 print(f"✅  Parsed {len(teams)} teams")
 
 # --------------------------------------------------------------------------- #
