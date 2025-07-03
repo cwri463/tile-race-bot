@@ -166,7 +166,7 @@ async def process_drop_approval(tname: str):
 # ========================== main.py (PART 3/3) ==========================
 """Discord event-handlers, slash commands (/grid, /reroll, /skip) and the
 entry-point."""
-
+from discord import app_commands as appcmd   
 from discord.app_commands import check 
 
 # ── optional one-guild fast-sync ─────────────────────────────────────────
@@ -216,7 +216,7 @@ async def skip_slash(inter: discord.Interaction):
     await perform_skip(tname)
 
 # ── Role-gate helper ────────────────────────────────────────────────
-ROLE_ID = 905218059604725801          # replace with your “Bot Admins” role id
+ROLE_ID = 905218059604725801          
 
 def has_role(role_id: int):
     async def _predicate(inter: discord.Interaction):
@@ -230,7 +230,7 @@ def has_role(role_id: int):
     description="Admin: reload board from Google Sheet CSVs",
     guild=GUILD,
 )
-@appcmd.default_permissions(manage_guild=True)   # requires Manage Guild
+@appcmd.default_permissions(manage_guild=False)   # requires Manage Guild
 async def syncsheet_slash(inter: discord.Interaction):
     await inter.response.defer(thinking=True)
 
