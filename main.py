@@ -1,11 +1,6 @@
 from __future__ import annotations
 """
-main.py – Discord Tile-Race Bot  (classic !reroll command)
-
-• Upload with attachment  → bot adds ✅ / ❌
-• ✅ = approve drop & roll            ❌ = decline
-• !reroll in notification channel    = spend a reroll
-• Board redraws after every move / refresh_board()
+main.py – Discord Tile-Race Bot with separate !skip and !reroll powers
 """
 
 # --------------------------------------------------------------------------- #
@@ -27,20 +22,20 @@ warnings.filterwarnings("ignore", category=UserWarning)
 # --------------------------------------------------------------------------- #
 # Emoji constants
 # --------------------------------------------------------------------------- #
-CHECK_EMOJI = "\N{WHITE HEAVY CHECK MARK}"   # ✅
-CROSS_EMOJI = "\N{CROSS MARK}"               # ❌
+CHECK_EMOJI = "\N{WHITE HEAVY CHECK MARK}"  # ✅
+CROSS_EMOJI = "\N{CROSS MARK}"              # ❌
 
 # --------------------------------------------------------------------------- #
-# Discord setup
+# Discord client
 # --------------------------------------------------------------------------- #
 intents = discord.Intents.default()
 intents.message_content = True
-intents.reactions       = True
+intents.reactions = True
 
 client = discord.Client(intents=intents)
 
 # --------------------------------------------------------------------------- #
-# Globals populated at runtime
+# Globals filled at runtime
 # --------------------------------------------------------------------------- #
 image_channel_id: int
 notification_channel_id: int
@@ -56,20 +51,23 @@ GRAPH: nx.DiGraph
 def is_me(msg: discord.Message) -> bool:
     return msg.author == client.user
 
+
 async def refresh_board() -> None:
-    board_chan = client.get_channel(board_channel_id)
-    await board_chan.purge(check=is_me)
+    chan = client.get_channel(board_channel_id)
+    await chan.purge(check=is_me)
     generate_board(tiles, board_data, teams)
-    await board_chan.send(file=discord.File("game_board.png"))
+    await chan.send(file=discord.File("game_board.png"))
     print("[DEBUG] Board refreshed")
+
 
 # --------------------------------------------------------------------------- #
 # Movement helpers
 # --------------------------------------------------------------------------- #
 async def advance_team(team: Dict[str, Any], dice: int) -> None:
-    """Move team forward exactly *dice* edges; prompt on forks."""
+    """Move *team* forward exactly *dice* edges; prompt on forks."""
     cur = team["tile"]
-    paths = []
+    paths: list[list[str]] = []
+
     for node in GRAPH.nodes:
         try:
             for p in nx.all_simple_paths(GRAPH, cur, node, cutoff=dice):
@@ -79,13 +77,15 @@ async def advance_team(team: Dict[str, Any], dice: int) -> None:
             continue
 
     if not paths:
+        print(f"[INFO] No path from {cur} with roll {dice}")
         return
+
     if len(paths) == 1:
         team["tile"] = paths[0][-1]
         return
 
     channel = client.get_channel(notification_channel_id)
-    prompt  = await channel.send(
+    prompt = await channel.send(
         f"**{team['name']}**, you rolled **{dice}** – choose a path:"
     )
     opts = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫"]
@@ -97,28 +97,66 @@ async def advance_team(team: Dict[str, Any], dice: int) -> None:
         await channel.send(f"{emoji} → {tiles[dest]['item-name']}")
     team["pending_paths"] = emoji_map
 
+
 async def perform_reroll(team_name: str):
+    """Undo last roll, then roll again."""
     team = teams[team_name]
-    old  = tiles[team["tile"]]["item-name"]
+    old_tile_name = tiles[f"tile{team['tile']}"]["item-name"]
+
+    # step back
+    team["tile"] -= team["last_roll"]
+
     dice = GameUtils.roll_dice(3, True)
     await advance_team(team, dice)
+    GameUtils.update_last_roll(team, dice)
     team["rerolls"] -= 1
-    await announce_roll(team_name, old, dice, tiles[team["tile"]]["item-name"], reroll=True)
+
+    await announce_roll(
+        team_name,
+        old_tile_name,
+        dice,
+        tiles[f"tile{team['tile']}"]["item-name"],
+        reroll=True,
+    )
     await refresh_board()
 
-async def process_drop_approval(team_name: str):
+
+async def perform_skip(team_name: str):
+    """Skip current tile entirely, roll from that tile forward."""
     team = teams[team_name]
-    old  = tiles[team["tile"]]["item-name"]
+    old_tile_name = tiles[team["tile"]]["item-name"]
+
     dice = GameUtils.roll_dice(3, True)
     await advance_team(team, dice)
-    await announce_roll(team_name, old, dice, tiles[team["tile"]]["item-name"], approved=True)
+    GameUtils.update_last_roll(team, dice)
+    team["skips"] -= 1
+
+    await announce_roll(
+        team_name,
+        old_tile_name,
+        dice,
+        tiles[team["tile"]]["item-name"],
+        approved=True,   # wording “approved” still fits
+    )
     await refresh_board()
 
-async def announce_roll(team: str, old: str, dice: int, new: str, *, reroll=False, approved=False):
-    verb = "reroll" if reroll else "approved" if approved else "rolled"
+
+async def announce_roll(
+    team: str,
+    old: str,
+    dice: int,
+    new: str,
+    *,
+    reroll=False,
+    approved=False,
+):
+    verb = "reroll" if reroll else "skip" if approved else "rolled"
     await client.get_channel(notification_channel_id).send(
-        f"**{team}** {verb}: **{old}** → **{new}** (🎲 {dice})"
+        f"**{team}** {verb}: **{old}** → **{new}** (🎲 {dice})\n"
+        f"Rerolls left: **{teams[team]['rerolls']}** • "
+        f"Skips left: **{teams[team]['skips']}**"
     )
+
 
 # --------------------------------------------------------------------------- #
 # Discord events
@@ -128,6 +166,7 @@ async def on_ready():
     await client.get_channel(notification_channel_id).purge(check=is_me)
     await refresh_board()
     print(f"[READY] {client.user} is online ✔")
+
 
 @client.event
 async def on_message(message: discord.Message):
@@ -149,6 +188,20 @@ async def on_message(message: discord.Message):
                 print(f"[WARN] add_reaction {emoji}: {e}")
         return
 
+    # ----- !skip command -----
+    if (
+        message.channel.id == notification_channel_id
+        and message.content.strip().lower() == "!skip"
+    ):
+        tname = GameUtils.find_team_name(message.author, teams)
+        if not tname:
+            return
+        if teams[tname].get("skips", 0) == 0:
+            await message.channel.send(f"Team **{tname}** has no skips left.")
+            return
+        await perform_skip(tname)
+        return
+
     # ----- !reroll command -----
     if (
         message.channel.id == notification_channel_id
@@ -161,6 +214,7 @@ async def on_message(message: discord.Message):
             await message.channel.send(f"Team **{tname}** has no rerolls left.")
             return
         await perform_reroll(tname)
+
 
 @client.event
 async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
@@ -190,6 +244,7 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
         teams[tname].pop("pending_paths", None)
         await refresh_board()
 
+
 # --------------------------------------------------------------------------- #
 # Entrypoint
 # --------------------------------------------------------------------------- #
@@ -197,17 +252,20 @@ if __name__ == "__main__":
     board_data, tiles, teams = ETL.load_config_file()
     secrets = ETL.load_secrets()
 
+    # build graph
     GRAPH = nx.DiGraph()
     for tid, td in tiles.items():
         for nxt in td.get("next", []):
             GRAPH.add_edge(tid, nxt)
 
+    # env vars
     image_channel_id        = int(os.getenv("IMAGE_CHANNEL_ID"))
     notification_channel_id = int(os.getenv("NOTIFICATION_CHANNEL_ID"))
     board_channel_id        = int(os.getenv("BOARD_CHANNEL_ID"))
 
-    # ensure each team dict has its own 'name' field
+    # ensure skips field exists
     for name, data in teams.items():
         data.setdefault("name", name)
+        data.setdefault("skips", 0)
 
     client.run(secrets["DISCORD_TOKEN"])
