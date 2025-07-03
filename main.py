@@ -1,164 +1,254 @@
 from __future__ import annotations
+"""
+main.py – Discord Tile‑Race Bot with separate **!skip** and **!reroll** powers
+----------------------------------------------------------------------
+ • **!skip**   – spend one *skip* token, ignore the current tile, roll ahead
+ • **!reroll** – undo the previous dice roll, then roll again from the
+                 earlier tile (classic reroll)
+The rest of the gameplay (uploads, ✅/❌ approvals, forks, auto board refresh)
+remains unchanged.
+"""
 
+# --------------------------------------------------------------------------- #
+# Imports
+# --------------------------------------------------------------------------- #
 import os
-import random
+import warnings
+from typing import Dict, Any, List
+
 import discord
 import networkx as nx
 
-from typing import Dict, Any
 from load_config import ETL
 from utils.board import generate_board
 from utils.game_functions import GameUtils
 
+warnings.filterwarnings("ignore", category=UserWarning)
+
+# --------------------------------------------------------------------------- #
+# Constants & Emojis
+# --------------------------------------------------------------------------- #
 CHECK_EMOJI = "\N{WHITE HEAVY CHECK MARK}"   # ✅
 CROSS_EMOJI = "\N{CROSS MARK}"               # ❌
 
+# --------------------------------------------------------------------------- #
+# Discord client
+# --------------------------------------------------------------------------- #
 intents = discord.Intents.default()
 intents.message_content = True
 intents.reactions = True
 client = discord.Client(intents=intents)
 
+# --------------------------------------------------------------------------- #
+# Globals filled at runtime
+# --------------------------------------------------------------------------- #
 image_channel_id: int
 notification_channel_id: int
 board_channel_id: int
+
 board_data: Dict[str, Any]
 tiles: Dict[str, Dict[str, Any]]
 teams: Dict[str, Dict[str, Any]]
 GRAPH: nx.DiGraph
 
-# ----------------------------- Core Logic ----------------------------- #
+# --------------------------------------------------------------------------- #
+# Helper utilities
+# --------------------------------------------------------------------------- #
 
 def is_me(msg: discord.Message) -> bool:
     return msg.author == client.user
 
-def build_graph() -> nx.DiGraph:
-    G = nx.DiGraph()
-    for tid, tdata in tiles.items():
-        for nxt in tdata.get("next", []):
-            G.add_edge(tid, nxt)
-    return G
 
-async def refresh_board():
+def tile_index(tile_id: str) -> int:
+    """Convert 'tile17' → 17 (helper for numeric math)."""
+    return int(tile_id.replace("tile", ""))
+
+
+def tile_id(idx: int) -> str:
+    return f"tile{idx}"
+
+
+async def refresh_board() -> None:
+    board_chan = client.get_channel(board_channel_id)
+    await board_chan.purge(check=is_me)
     generate_board(tiles, board_data, teams)
+    await board_chan.send(file=discord.File("game_board.png"))
     print("[DEBUG] Board refreshed")
 
-async def advance_team(team: Dict[str, Any], dice: int):
-    cur = team["tile"]
-    paths = list(nx.all_simple_paths(GRAPH, cur, None, cutoff=dice))
-    if not paths:
-        print(f"[WARN] No paths from {cur} with roll {dice}")
-        return
-    path = random.choice(paths)
-    dest = path[-1]
-    team["tile"] = dest
-    print(f"[MOVE] {team['name']} auto → {dest}")
-    await refresh_board()
 
-async def perform_reroll(tname: str):
-    team = teams[tname]
+# --------------------------------------------------------------------------- #
+# Movement helpers
+# --------------------------------------------------------------------------- #
+async def advance_team(team: Dict[str, Any], dice: int) -> None:
+    """Move *team* exactly *dice* edges; auto‑choose path if single."""
+    cur = team["tile"]
+    paths: List[List[str]] = []
+
+    for node in GRAPH.nodes:
+        try:
+            for p in nx.all_simple_paths(GRAPH, cur, node, cutoff=dice):
+                if len(p) - 1 == dice:
+                    paths.append(p)
+        except nx.NetworkXNoPath:
+            continue
+
+    if not paths:
+        print(f"[INFO] No path from {cur} with roll {dice}")
+        return
+
+    if len(paths) == 1:
+        team["tile"] = paths[0][-1]
+        return
+
+    channel = client.get_channel(notification_channel_id)
+    prompt = await channel.send(
+        f"**{team['name']}**, you rolled **{dice}** – choose a path:"
+    )
+    opts = ["🇦", "🇧", "🇨", "🇩", "🇪", "🇫"]
+    emoji_map = {}
+    for idx, p in enumerate(paths[: len(opts)]):
+        dest, emoji = p[-1], opts[idx]
+        emoji_map[emoji] = dest
+        await prompt.add_reaction(emoji)
+        await channel.send(f"{emoji} → {tiles[dest]['item-name']}")
+    team["pending_paths"] = emoji_map
+
+
+async def perform_reroll(team_name: str):
+    """Undo previous roll and reroll from the earlier tile."""
+    team = teams[team_name]
     if team["rerolls"] <= 0:
-        print(f"[INFO] {tname} has no rerolls left")
+        await client.get_channel(notification_channel_id).send(
+            f"Team **{team_name}** has no rerolls left."
+        )
         return
 
-    team["rerolls"] -= 1
-    dice = GameUtils.roll_dice(3, bonus_roll=False)
+    # step back to previous tile index
+    cur_idx  = tile_index(team["tile"])
+    back_idx = cur_idx - team.get("last_roll", 0)
+    team["tile"] = tile_id(back_idx)
 
-    old_tile_name = tiles[team["tile"]]["item-name"]
-    paths = list(nx.all_simple_paths(GRAPH, team["tile"], None, cutoff=dice))
-    if not paths:
-        print(f"[REROLL] No valid reroll paths for {tname}")
-        return
-    new_tile = random.choice(paths)[-1]
-    new_tile_name = tiles[new_tile]["item-name"]
-    team["tile"] = new_tile
-
-    print(f"[REROLL] {tname} ({old_tile_name}) rerolled to {new_tile_name} → {new_tile}")
-    await refresh_board()
-
-async def perform_skip(tname: str):
-    team = teams[tname]
-    if team.get("skips", 0) <= 0:
-        print(f"[INFO] {tname} has no skips left")
-        return
-
-    team["skips"] -= 1
-    dice = GameUtils.roll_dice(3, bonus_roll=False)
-    cur = team["tile"]
-
-    next_tiles = tiles[cur].get("next", [])
-    if not next_tiles:
-        print(f"[SKIP] No next tiles for {cur}")
-        return
-
-    skipped = random.choice(next_tiles)
-    paths = list(nx.all_simple_paths(GRAPH, skipped, None, cutoff=dice))
-    if not paths:
-        print(f"[SKIP] No valid path from skipped {skipped}")
-        return
-
-    new_tile = random.choice(paths)[-1]
-    print(f"[SKIP] {tname} skipped {cur}, moved to {new_tile}")
-    team["tile"] = new_tile
-    await refresh_board()
-
-async def process_drop_approval(tname: str):
-    team = teams[tname]
     dice = GameUtils.roll_dice(3, bonus_roll=True)
     await advance_team(team, dice)
+    GameUtils.update_last_roll(team, dice)
+    team["rerolls"] -= 1
 
-# --------------------------- Event Handlers --------------------------- #
+    await refresh_board()
 
+
+async def perform_skip(team_name: str):
+    """Skip current tile completely, then roll from that tile."""
+    team = teams[team_name]
+    if team.get("skips", 0) <= 0:
+        await client.get_channel(notification_channel_id).send(
+            f"Team **{team_name}** has no skips left."
+        )
+        return
+
+    dice = GameUtils.roll_dice(3, bonus_roll=True)
+    await advance_team(team, dice)
+    GameUtils.update_last_roll(team, dice)
+    team["skips"] -= 1
+
+    await refresh_board()
+
+
+async def process_drop_approval(team_name: str):
+    team = teams[team_name]
+    dice = GameUtils.roll_dice(3, bonus_roll=True)
+    await advance_team(team, dice)
+    GameUtils.update_last_roll(team, dice)
+    await refresh_board()
+
+
+# --------------------------------------------------------------------------- #
+# Discord events
+# --------------------------------------------------------------------------- #
 @client.event
 async def on_ready():
-    global image_channel_id, notification_channel_id, board_channel_id
-    global board_data, tiles, teams, GRAPH
-
-    config = ETL("config.json")
-    image_channel_id        = config.get("image_channel_id")
-    notification_channel_id = config.get("notification_channel_id")
-    board_channel_id        = config.get("board_channel_id")
-    board_data              = config.get("board_data")
-    tiles                   = config.get("tiles")
-    teams                   = config.get("teams")
-
-    for tname in teams:
-        teams[tname]["name"] = tname
-
-    GRAPH = build_graph()
+    await client.get_channel(notification_channel_id).purge(check=is_me)
     await refresh_board()
-    print(f"[READY] {client.user} is online ✔")
+    print(f"[READY] {client.user} online ✔")
+
 
 @client.event
-async def on_message(msg):
-    if is_me(msg): return
-
-    content = msg.content.lower()
-    tname = GameUtils.find_team_name(msg.author, teams)
-    if tname is None:
+async def on_message(message: discord.Message):
+    if is_me(message):
         return
 
-    if content.startswith("!reroll"):
-        await perform_reroll(tname)
-    elif content.startswith("!skip"):
-        await perform_skip(tname)
+    content = message.content.strip().lower()
+    tname = GameUtils.find_team_name(message.author, teams)
+
+    # ---------- uploads ---------- #
+    if message.channel.id == image_channel_id and message.attachments:
+        if tname:
+            await client.get_channel(notification_channel_id).send(
+                f"**{tname}** uploaded a drop – waiting for approval."
+            )
+        for e in (CHECK_EMOJI, CROSS_EMOJI):
+            try:
+                await message.add_reaction(e)
+            except Exception:
+                pass
+        return
+
+    # ---------- !skip ---------- #
+    if content == "!skip" and message.channel.id == notification_channel_id:
+        if tname:
+            await perform_skip(tname)
+        return
+
+    # ---------- !reroll ---------- #
+    if content == "!reroll" and message.channel.id == notification_channel_id:
+        if tname:
+            await perform_reroll(tname)
+        return
+
 
 @client.event
-async def on_reaction_add(reaction, user):
-    if user == client.user: return
-    if str(reaction.emoji) != CHECK_EMOJI:
-        print(f"[REACTION] '{reaction.emoji}' by {user.display_name} in #{reaction.message.channel.name}")
+async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
+    if user.bot:
         return
 
+    # approval/decline channel
+    if reaction.message.channel.id == image_channel_id:
+        tname = GameUtils.find_team_name(reaction.message.author, teams)
+        if not tname:
+            return
+        if str(reaction.emoji) == CHECK_EMOJI:
+            await process_drop_approval(tname)
+        return
+
+    # fork choice
     tname = GameUtils.find_team_name(user, teams)
-    if tname is None:
+    if not tname:
         return
+    pending = teams[tname].get("pending_paths")
+    if pending and str(reaction.emoji) in pending:
+        teams[tname]["tile"] = pending.pop(str(reaction.emoji))
+        teams[tname].pop("pending_paths", None)
+        await refresh_board()
 
-    await process_drop_approval(tname)
 
-# ------------------------------ Launch ------------------------------- #
+# --------------------------------------------------------------------------- #
+# Entrypoint
+# --------------------------------------------------------------------------- #
+if __name__ == "__main__":
+    board_data, tiles, teams = ETL.load_config_file()
+    secrets = ETL.load_secrets()
 
-token = os.environ.get("DISCORD_BOT_TOKEN")
-if not token:
-    raise RuntimeError("DISCORD_BOT_TOKEN not set in environment")
+    GRAPH = nx.DiGraph()
+    for tid, td in tiles.items():
+        for nxt in td.get("next", []):
+            GRAPH.add_edge(tid, nxt)
 
-client.run(token)
+    image_channel_id        = int(os.environ["IMAGE_CHANNEL_ID"])
+    notification_channel_id = int(os.environ["NOTIFICATION_CHANNEL_ID"])
+    board_channel_id        = int(os.environ["BOARD_CHANNEL_ID"])
+
+    for name, data in teams.items():
+        data.setdefault("name", name)
+        data.setdefault("skips", 0)
+        data.setdefault("last_roll", 0)
+
+    client.run(secrets["DISCORD_TOKEN"])
