@@ -167,6 +167,8 @@ async def process_drop_approval(tname: str):
 """Discord event-handlers, slash commands (/grid, /reroll, /skip) and the
 entry-point."""
 
+from discord.app_commands import check 
+
 # ── optional one-guild fast-sync ─────────────────────────────────────────
 # Add DISCORD_GUILD_ID to Railway (server-ID as integer). If unset, commands
 # register globally (may take up to 1 h to appear).
@@ -212,7 +214,16 @@ async def skip_slash(inter: discord.Interaction):
         return
     await inter.response.defer()
     await perform_skip(tname)
-    
+
+# ── Role-gate helper ────────────────────────────────────────────────
+ROLE_ID = 905218059604725801          # replace with your “Bot Admins” role id
+
+def has_role(role_id: int):
+    async def _predicate(inter: discord.Interaction):
+        return any(r.id == role_id for r in inter.user.roles)
+    return check(_predicate)
+# --------------------------------------------------------------------
+
 # ---- Slash command: /syncsheet ----------------------------------------
 @TREE.command(
     name="syncsheet",
