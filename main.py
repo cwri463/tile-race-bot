@@ -216,14 +216,18 @@ async def skip_slash(inter: discord.Interaction):
 # ── Events ───────────────────────────────────────────────────────────────
 @bot.event
 async def on_ready():
-    # sync slash-commands
+    # ── remove lingering GLOBAL commands so you don’t see duplicates ──
+    if GUILD:                      # we are using per-guild commands
+        TREE.clear_commands(guild=None)   # wipe globals once
+
+    # (re)-register commands for the chosen scope
     synced = await TREE.sync(guild=GUILD) if GUILD else await TREE.sync()
     print("[SLASH] synced:", [c.name for c in synced])
 
+    # normal startup housekeeping
     await bot.get_channel(notification_channel_id).purge(check=is_me)
     await refresh_board()
     print(f"[READY] {bot.user} online ✔")
-
 @bot.event
 async def on_message(msg: discord.Message):
     if is_me(msg):
