@@ -163,21 +163,30 @@ async def process_drop_approval(tname: str):
 
 # ======================= END PART 2/3 =======================
 
-# ========================== main.py (PART 3/3) ==========================
-"""Discord event handlers, slash command /grid, and entry‑point."""
+# ========================== main.py (PART 3/3) ==========================
+"""Discord event-handlers, slash commands (/grid, /reroll, /skip) and the
+entry-point."""
 
-# ---- Slash command: /grid -----------------------------------------
-@TREE.command(name="grid", description="Generate an empty planning grid")
+# ── optional one-guild fast-sync ─────────────────────────────────────────
+# Add DISCORD_GUILD_ID to Railway (server-ID as integer). If unset, commands
+# register globally (may take up to 1 h to appear).
+GUILD_ID = int(os.getenv("DISCORD_GUILD_ID", "0") or 0)
+GUILD    = discord.Object(id=GUILD_ID) if GUILD_ID else None
+# ------------------------------------------------------------------------
+
+# ---- Slash command: /grid ----------------------------------------------
+@TREE.command(name="grid",
+              description="Generate an empty planning grid",
+              guild=GUILD)
 async def grid_slash(inter: discord.Interaction):
     await inter.response.defer()
     path = render_empty_grid(board_data, tiles)
     await inter.followup.send(file=discord.File(path))
 
-# ---- Slash command: /reroll ---------------------------------------
-@TREE.command(
-    name="reroll",
-    description="Use one reroll to roll again from your previous spot",
-)
+# ---- Slash command: /reroll --------------------------------------------
+@TREE.command(name="reroll",
+              description="Use one reroll to roll again from your previous spot",
+              guild=GUILD)
 async def reroll_slash(inter: discord.Interaction):
     tname = GameUtils.find_team_name(inter.user, teams)
     if not tname:
@@ -186,15 +195,13 @@ async def reroll_slash(inter: discord.Interaction):
             ephemeral=True,
         )
         return
-
     await inter.response.defer()
     await perform_reroll(tname)
 
-# ---- Slash command: /skip -----------------------------------------
-@TREE.command(
-    name="skip",
-    description="Spend one skip token to roll ahead without completing the tile",
-)
+# ---- Slash command: /skip ----------------------------------------------
+@TREE.command(name="skip",
+              description="Spend one skip token to roll ahead without completing the tile",
+              guild=GUILD)
 async def skip_slash(inter: discord.Interaction):
     tname = GameUtils.find_team_name(inter.user, teams)
     if not tname:
@@ -203,15 +210,16 @@ async def skip_slash(inter: discord.Interaction):
             ephemeral=True,
         )
         return
-
     await inter.response.defer()
     await perform_skip(tname)
 
-
-# ---- Events ----
+# ── Events ───────────────────────────────────────────────────────────────
 @bot.event
 async def on_ready():
-    await TREE.sync()
+    # sync slash-commands
+    synced = await TREE.sync(guild=GUILD) if GUILD else await TREE.sync()
+    print("[SLASH] synced:", [c.name for c in synced])
+
     await bot.get_channel(notification_channel_id).purge(check=is_me)
     await refresh_board()
     print(f"[READY] {bot.user} online ✔")
@@ -220,9 +228,11 @@ async def on_ready():
 async def on_message(msg: discord.Message):
     if is_me(msg):
         return
-    tname = GameUtils.find_team_name(msg.author, teams)
+
+    tname   = GameUtils.find_team_name(msg.author, teams)
     content = msg.content.strip().lower()
 
+    # image upload channel
     if msg.channel.id == image_channel_id and msg.attachments:
         if tname:
             await bot.get_channel(notification_channel_id).send(
@@ -234,10 +244,10 @@ async def on_message(msg: discord.Message):
                 pass
         return
 
+    # legacy text commands (keep or delete)
     if content == "!skip" and msg.channel.id == notification_channel_id and tname:
         await perform_skip(tname)
         return
-
     if content == "!reroll" and msg.channel.id == notification_channel_id and tname:
         await perform_reroll(tname)
         return
@@ -246,6 +256,8 @@ async def on_message(msg: discord.Message):
 async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
     if user.bot:
         return
+
+    # ✅ / ❌ approval on image
     if reaction.message.channel.id == image_channel_id:
         tname = GameUtils.find_team_name(user, teams)
         if not tname:
@@ -257,7 +269,7 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
                 f"**{tname}** drop was declined.")
         return
 
-    # fork choice
+    # fork-choice reactions
     for t in teams.values():
         pending = t.get("pending_paths")
         if pending and str(reaction.emoji) in pending and str(user.id) in t["members"]:
@@ -266,7 +278,7 @@ async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
             await refresh_board()
             return
 
-# ---- Main entry ----
+# ── Entry-point ─────────────────────────────────────────────────────────
 if __name__ == "__main__":
     board_data, tiles, teams = ETL.load()
 
@@ -277,10 +289,10 @@ if __name__ == "__main__":
     # ensure counters present
     for d in teams.values():
         d.setdefault("rerolls", 0)
-        d.setdefault("skips",    0)
+        d.setdefault("skips",   0)
         d.setdefault("last_roll", 0)
 
-    # build graph
+    # build graph once
     GRAPH = nx.DiGraph()
     for tid, td in tiles.items():
         for nxt in td.get("next", []):
@@ -291,4 +303,4 @@ if __name__ == "__main__":
         raise RuntimeError("DISCORD_TOKEN not set")
     bot.run(token)
 
-# ======================== END main.py ========================
+# ======================== END main.py ===================================
