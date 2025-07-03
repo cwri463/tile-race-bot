@@ -55,9 +55,9 @@ def load_from_sheet() -> tuple[dict[str, Any],
 
     # board-wide config stays inside game-config.json; reuse current
     board_data = {
-        "board-width":  board_data_global.get("board-width", 1600),
-        "board-height": board_data_global.get("board-height", 900),
-        "tile-size":    board_data_global.get("tile-size",  100),
-        "player-size":  board_data_global.get("player-size", 60),
+        "board-width":  board_data.get("board-width", 1600),
+        "board-height": board_data.get("board-height", 900),
+        "tile-size":    board_data.get("tile-size",  100),
+        "player-size":  board_data.get("player-size", 60),
     }
     return board_data, tiles, teams
