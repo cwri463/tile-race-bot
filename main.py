@@ -166,15 +166,18 @@ async def process_drop_approval(tname: str):
 # ========================== main.py (PART 3/3) ==========================
 """Discord event handlers, slash command /grid, and entry‑point."""
 
-# ---- Slash command: /grid ----
+# ---- Slash command: /grid -----------------------------------------
 @TREE.command(name="grid", description="Generate an empty planning grid")
 async def grid_slash(inter: discord.Interaction):
     await inter.response.defer()
     path = render_empty_grid(board_data, tiles)
     await inter.followup.send(file=discord.File(path))
-    # ---- Slash command: /reroll ----------------------------------------
-@TREE.command(name="reroll",
-              description="Use one reroll to roll again from your previous spot")
+
+# ---- Slash command: /reroll ---------------------------------------
+@TREE.command(
+    name="reroll",
+    description="Use one reroll to roll again from your previous spot",
+)
 async def reroll_slash(inter: discord.Interaction):
     tname = GameUtils.find_team_name(inter.user, teams)
     if not tname:
@@ -187,9 +190,11 @@ async def reroll_slash(inter: discord.Interaction):
     await inter.response.defer()
     await perform_reroll(tname)
 
-# ---- Slash command: /skip ------------------------------------------
-@TREE.command(name="skip",
-              description="Spend one skip token to roll ahead without completing the tile")
+# ---- Slash command: /skip -----------------------------------------
+@TREE.command(
+    name="skip",
+    description="Spend one skip token to roll ahead without completing the tile",
+)
 async def skip_slash(inter: discord.Interaction):
     tname = GameUtils.find_team_name(inter.user, teams)
     if not tname:
@@ -201,6 +206,7 @@ async def skip_slash(inter: discord.Interaction):
 
     await inter.response.defer()
     await perform_skip(tname)
+
 
 # ---- Events ----
 @bot.event
