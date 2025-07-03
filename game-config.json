@@ -129,7 +129,8 @@
         1
       ],
       "next": [
-        "tile7"
+        "tile7",
+        "tile8"
       ],
       "points": 1,
       "must-hit": false
@@ -143,7 +144,7 @@
         2
       ],
       "next": [
-        "tile6"
+        "tile8"
       ],
       "points": 1,
       "must-hit": false
@@ -157,7 +158,7 @@
         3
       ],
       "next": [
-        "tile5"
+        "tile9"
       ],
       "points": 1,
       "must-hit": false
@@ -171,7 +172,7 @@
         3
       ],
       "next": [
-        "tile6"
+        "tile11"
       ],
       "points": 1,
       "must-hit": false
@@ -185,7 +186,8 @@
         2
       ],
       "next": [
-        "tile7"
+        "tile11",
+        "tile12"
       ],
       "points": 1,
       "must-hit": false
@@ -199,7 +201,8 @@
         3
       ],
       "next": [
-        "tile8"
+        "tile10",
+        "tile12"
       ],
       "points": 1,
       "must-hit": false
