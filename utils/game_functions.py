@@ -1,4 +1,5 @@
 import random
+import secrets 
 from typing import Dict
 
 
@@ -19,12 +20,16 @@ class GameUtils:
     @staticmethod
     def roll_dice(max_roll: int, bonus_roll: bool) -> int:
         """
-        Roll from 1-max_roll.  
-        If *bonus_roll* is True, there’s a 5 % chance to return 4 (for boards that allow it).
+        Uniform roll in 1-max_roll.
+        If *bonus_roll* is True, there’s a 5 % chance the roll is upgraded to 4.
+        Uses the secrets module for unbiased randomness.
         """
-        if bonus_roll and random.random() < 0.05:
+        # 5 % chance to roll a 4, regardless of max_roll
+        if bonus_roll and secrets.randbelow(100) < 5:
             return 4
-        return random.randint(1, max_roll)
+
+        # secrets.randbelow(x) returns 0..x-1  → add 1 for 1..x
+        return 1 + secrets.randbelow(max_roll)
 
     # ------------------------------------------------------------------ #
     # Team lookup
