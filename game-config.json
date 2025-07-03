@@ -7,7 +7,8 @@
       ],
       "tile": "tile0",
       "rerolls": 1,
-      "last_roll": 0
+      "skips": 5,
+      "roleId": ""
     },
     "team b": {
       "name": "team b",
@@ -16,7 +17,8 @@
       ],
       "tile": "tile0",
       "rerolls": 5,
-      "last_roll": 0
+      "skips": 3,
+      "roleId": ""
     },
     "team c": {
       "name": "team c",
@@ -25,7 +27,8 @@
       ],
       "tile": "tile0",
       "rerolls": 3,
-      "last_roll": 0
+      "skips": 2,
+      "roleId": ""
     }
   },
   "board-config": {
