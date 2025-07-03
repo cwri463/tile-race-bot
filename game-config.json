@@ -118,8 +118,7 @@
         1
       ],
       "next": [
-        "tile6",
-        "tile7"
+        "tile6"
       ],
       "points": 1,
       "must-hit": false
@@ -133,8 +132,7 @@
         1
       ],
       "next": [
-        "tile7",
-        "tile8"
+        "tile7"
       ],
       "points": 1,
       "must-hit": false
@@ -176,7 +174,7 @@
         3
       ],
       "next": [
-        "tile11"
+        "tile10"
       ],
       "points": 1,
       "must-hit": false
@@ -190,8 +188,7 @@
         2
       ],
       "next": [
-        "tile11",
-        "tile12"
+        "tile11"
       ],
       "points": 1,
       "must-hit": false
@@ -205,7 +202,6 @@
         3
       ],
       "next": [
-        "tile10",
         "tile12"
       ],
       "points": 1,
