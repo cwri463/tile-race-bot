@@ -172,6 +172,35 @@ async def grid_slash(inter: discord.Interaction):
     await inter.response.defer()
     path = render_empty_grid(board_data, tiles)
     await inter.followup.send(file=discord.File(path))
+    # ---- Slash command: /reroll ----------------------------------------
+@TREE.command(name="reroll",
+              description="Use one reroll to roll again from your previous spot")
+async def reroll_slash(inter: discord.Interaction):
+    tname = GameUtils.find_team_name(inter.user, teams)
+    if not tname:
+        await inter.response.send_message(
+            "You aren't on any team. Ask an admin to add you first.",
+            ephemeral=True,
+        )
+        return
+
+    await inter.response.defer()
+    await perform_reroll(tname)
+
+# ---- Slash command: /skip ------------------------------------------
+@TREE.command(name="skip",
+              description="Spend one skip token to roll ahead without completing the tile")
+async def skip_slash(inter: discord.Interaction):
+    tname = GameUtils.find_team_name(inter.user, teams)
+    if not tname:
+        await inter.response.send_message(
+            "You aren't on any team. Ask an admin to add you first.",
+            ephemeral=True,
+        )
+        return
+
+    await inter.response.defer()
+    await perform_skip(tname)
 
 # ---- Events ----
 @bot.event
