@@ -270,17 +270,19 @@ async def syncsheet_slash(inter: discord.Interaction):
 # -----------------------------------------------------------------------
 @bot.event
 async def on_ready():
-    # remove lingering GLOBAL commands (prevents duplicates)
-    if GUILD:
-        TREE.clear_commands(guild=None)
+    # 1⃣ Wipe *global* application-wide commands (prevents duplicates)
+    TREE.clear_commands(guild=None)
+    await TREE.sync(guild=None)       # push empty global set to Discord
 
-    synced = await TREE.sync(guild=GUILD) if GUILD else await TREE.sync()
+    # 2⃣ Sync the real, guild-scoped commands
+    synced = await TREE.sync(guild=GUILD)
     print("[SLASH] synced:", [c.name for c in synced])
 
+    # (optional) any other startup tasks
     await bot.get_channel(notification_channel_id).purge(check=is_me)
     await refresh_board()
     print(f"[READY] {bot.user} online ✔")
-
+    
 @bot.event
 async def on_message(msg: discord.Message):
     if is_me(msg):
