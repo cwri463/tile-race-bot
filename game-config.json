@@ -114,8 +114,8 @@
         1
       ],
       "next": [
-        "tile4",
-        "tile5"
+        "tile6",
+        "tile7"
       ],
       "points": 1,
       "must-hit": false
@@ -143,7 +143,7 @@
         2
       ],
       "next": [
-        "tile4"
+        "tile6"
       ],
       "points": 1,
       "must-hit": false
@@ -205,8 +205,8 @@
       "must-hit": false
     },
     "tile12": {
-      "item-name": "Sulfur blades",
-      "item-picture": "Sulfur_blades.png",
+      "item-name": "Sulphur blades",
+      "item-picture": "Sulphur_blades.png",
       "tile-desc": "",
       "coords": [
         8,
