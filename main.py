@@ -1,10 +1,11 @@
 from __future__ import annotations
 """
-main.py – Discord Tile-Race Bot (slash-command edition)
-------------------------------------------------------
-* /reroll  – spend a reroll for your own team
-* /refreshboard – admin-only force redraw
-* Uploads, ✅/❌ approvals, forks, and board rendering as before
+main.py – Discord Tile-Race Bot  (classic !reroll command)
+
+• Upload with attachment  → bot adds ✅ / ❌
+• ✅ = approve drop & roll            ❌ = decline
+• !reroll in notification channel    = spend a reroll
+• Board redraws after every move / refresh_board()
 """
 
 # --------------------------------------------------------------------------- #
@@ -15,7 +16,6 @@ import warnings
 from typing import Dict, Any
 
 import discord
-from discord import app_commands
 import networkx as nx
 
 from load_config import ETL
@@ -25,21 +25,19 @@ from utils.game_functions import GameUtils
 warnings.filterwarnings("ignore", category=UserWarning)
 
 # --------------------------------------------------------------------------- #
-# Constants
+# Emoji constants
 # --------------------------------------------------------------------------- #
 CHECK_EMOJI = "\N{WHITE HEAVY CHECK MARK}"   # ✅
 CROSS_EMOJI = "\N{CROSS MARK}"               # ❌
-OWNER_IDS   = {"203664557762150401","632453762383872030","731780391031013387"}         # <-- put your Discord user-ID(s)
 
 # --------------------------------------------------------------------------- #
-# Discord objects
+# Discord setup
 # --------------------------------------------------------------------------- #
 intents = discord.Intents.default()
 intents.message_content = True
-intents.reactions = True
+intents.reactions       = True
 
 client = discord.Client(intents=intents)
-tree   = app_commands.CommandTree(client)
 
 # --------------------------------------------------------------------------- #
 # Globals populated at runtime
@@ -53,22 +51,23 @@ teams: Dict[str, Dict[str, Any]]
 GRAPH: nx.DiGraph
 
 # --------------------------------------------------------------------------- #
-# Helper
+# Helpers
 # --------------------------------------------------------------------------- #
 def is_me(msg: discord.Message) -> bool:
     return msg.author == client.user
 
 async def refresh_board() -> None:
-    chan = client.get_channel(board_channel_id)
-    await chan.purge(check=is_me)
+    board_chan = client.get_channel(board_channel_id)
+    await board_chan.purge(check=is_me)
     generate_board(tiles, board_data, teams)
-    await chan.send(file=discord.File("game_board.png"))
+    await board_chan.send(file=discord.File("game_board.png"))
     print("[DEBUG] Board refreshed")
 
 # --------------------------------------------------------------------------- #
-# Movement / dice logic
+# Movement helpers
 # --------------------------------------------------------------------------- #
 async def advance_team(team: Dict[str, Any], dice: int) -> None:
+    """Move team forward exactly *dice* edges; prompt on forks."""
     cur = team["tile"]
     paths = []
     for node in GRAPH.nodes:
@@ -122,36 +121,10 @@ async def announce_roll(team: str, old: str, dice: int, new: str, *, reroll=Fals
     )
 
 # --------------------------------------------------------------------------- #
-# Slash-commands
-# --------------------------------------------------------------------------- #
-@tree.command(name="reroll", description="Spend a reroll for your team")
-async def reroll_cmd(inter: discord.Interaction):
-    tname = GameUtils.find_team_name(inter.user, teams)
-    if not tname:
-        await inter.response.send_message("You’re not on any team 🤔", ephemeral=True)
-        return
-    if teams[tname]["rerolls"] == 0:
-        await inter.response.send_message(f"Team **{tname}** has no rerolls left.", ephemeral=True)
-        return
-    await inter.response.defer()
-    await perform_reroll(tname)
-    await inter.followup.send("Reroll complete ✔", ephemeral=True)
-
-@tree.command(name="refreshboard", description="Force-redraw the board (admin)")
-async def refresh_cmd(inter: discord.Interaction):
-    if str(inter.user.id) not in OWNER_IDS:
-        await inter.response.send_message("Only admins can run this.", ephemeral=True)
-        return
-    await inter.response.defer()
-    await refresh_board()
-    await inter.followup.send("Board refreshed ✅", ephemeral=True)
-
-# --------------------------------------------------------------------------- #
 # Discord events
 # --------------------------------------------------------------------------- #
 @client.event
 async def on_ready():
-    await tree.sync()
     await client.get_channel(notification_channel_id).purge(check=is_me)
     await refresh_board()
     print(f"[READY] {client.user} is online ✔")
@@ -176,12 +149,25 @@ async def on_message(message: discord.Message):
                 print(f"[WARN] add_reaction {emoji}: {e}")
         return
 
+    # ----- !reroll command -----
+    if (
+        message.channel.id == notification_channel_id
+        and message.content.strip().lower() == "!reroll"
+    ):
+        tname = GameUtils.find_team_name(message.author, teams)
+        if not tname:
+            return
+        if teams[tname]["rerolls"] == 0:
+            await message.channel.send(f"Team **{tname}** has no rerolls left.")
+            return
+        await perform_reroll(tname)
+
 @client.event
 async def on_reaction_add(reaction: discord.Reaction, user: discord.User):
     if user.bot:
         return
 
-    # ----- approval / decline -----
+    # ----- approve / decline -----
     if reaction.message.channel.id == image_channel_id:
         tname = GameUtils.find_team_name(reaction.message.author, teams)
         if not tname:
@@ -220,6 +206,7 @@ if __name__ == "__main__":
     notification_channel_id = int(os.getenv("NOTIFICATION_CHANNEL_ID"))
     board_channel_id        = int(os.getenv("BOARD_CHANNEL_ID"))
 
+    # ensure each team dict has its own 'name' field
     for name, data in teams.items():
         data.setdefault("name", name)
 
