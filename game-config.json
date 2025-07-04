@@ -222,6 +222,20 @@
       "must-hit": false
     },
     "tile13": {
+      "item-name": "Jar of eyes",
+      "item-picture": "Jar_of_eyes.png",
+      "tile-desc": "",
+      "coords": [
+        8,
+        -1
+      ],
+      "next": [
+        "tile14"
+      ],
+      "points": 1,
+      "must-hit": false
+    },
+    "tile14": {
       "item-name": "Finish",
       "item-picture": "Finish.png",
       "tile-desc": "",
